@@ -221,16 +221,13 @@ async function initApplications() {
                         : 'No Resume'}
                 </td>
                 <td>
-                    <select class="form-select" style="font-size:.8rem; padding:4px; max-width:140px; display:inline-block" 
-                            onchange="if(this.value) updateAppStatus(${a.application_id}, this.value)">
-                        <option value="">Update Status...</option>
-                        <option value="Reviewed">Mark Reviewed</option>
-                        <option value="Shortlisted">Shortlist</option>
-                        <option value="Rejected">Reject</option>
-                    </select>
-                    
-                    ${['Shortlisted', 'Interviewed'].includes(a.status) ? 
-                        `<button class="btn btn-xs btn-primary mt-1" onclick="scheduleInterview(${a.application_id}, '${a.student_name}')">Schedule Int.</button>` : ''}
+                    ${a.status === 'Applied' || a.status === 'Reviewed' ? `
+                        <button class="btn btn-sm btn-success" onclick="updateAppStatus(${a.application_id}, 'Approved')" style="margin-bottom:4px">Approve</button><br>
+                        <button class="btn btn-sm btn-danger" onclick="updateAppStatus(${a.application_id}, 'Rejected')">Reject</button>
+                    ` : ''}
+
+                    ${['Approved', 'Shortlisted', 'Interview Scheduled'].includes(a.status) ? 
+                        `<button class="btn btn-sm btn-primary mt-1" onclick="scheduleInterview(${a.application_id}, '${a.student_name.replace(/'/g, "\\'")}')">Schedule Interview</button>` : ''}
                 </td>
             </tr>
         `).join('') || '<tr><td colspan="7" class="text-center">No applications found</td></tr>';
@@ -306,9 +303,9 @@ window.extendOfferModal = (appId, studentName, title) => {
 };
 
 async function initOffers() {
-    // 1. Get eligible applications (Shortlisted/Interviewed)
+    // 1. Get eligible applications (Includes Interviewed, Approved, etc)
     const elRes = await fetch(`${API_BASE}company.php?action=get_applications`).then(r=>r.json());
-    const eligibleApps = elRes.applications.filter(a => ['Shortlisted', 'Interviewed'].includes(a.status));
+    const eligibleApps = elRes.applications.filter(a => ['Approved', 'Shortlisted', 'Interviewed', 'Interview Scheduled'].includes(a.status));
     
     const candBody = document.getElementById('candidatesBody');
     if (candBody) {
@@ -318,7 +315,10 @@ async function initOffers() {
                 <td>${a.branch}</td>
                 <td>${a.title}</td>
                 <td><span class="badge ${getBadgeClass(a.status)}">${a.status}</span></td>
-                <td><button class="btn btn-sm btn-success" onclick="extendOfferModal(${a.application_id}, '${a.student_name}', '${a.title}')">Extend Offer</button></td>
+                <td>
+                    <button class="btn btn-sm btn-success" onclick="extendOfferModal(${a.application_id}, '${a.student_name}', '${a.title}')" style="margin-bottom:4px">Extend Offer</button><br>
+                    <button class="btn btn-sm btn-danger" onclick="updateAppStatus(${a.application_id}, 'Rejected')">Reject</button>
+                </td>
             </tr>
         `).join('') || '<tr><td colspan="5" class="text-center">No eligible candidates available to extend offers. Shortlist candidates first.</td></tr>';
     }

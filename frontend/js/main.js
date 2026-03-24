@@ -194,12 +194,12 @@ function toggleProfileMenu() {
 // ── UI Helpers ──────────────────────────────────────────────
 function getBadgeClass(status) {
     const map = {
-        'Applied':'badge-gray', 'Shortlisted':'badge-warning', 'Selected':'badge-success', 
+        'Applied':'badge-gray', 'Reviewed':'badge-info', 'Shortlisted':'badge-warning', 'Selected':'badge-success', 
         'Rejected':'badge-danger', 'Interview Scheduled':'badge-info', 'Pending Approval':'badge-warning',
         'Open':'badge-success', 'Closed':'badge-gray', 'Active':'badge-info', 'Completed':'badge-success',
         'Terminated':'badge-danger', 'Offered':'badge-info', 'Accepted':'badge-success', 'Joined':'badge-success',
         'Declined':'badge-danger', 'Scheduled':'badge-info', 'Cancelled':'badge-danger', 'Internship':'badge-info',
-        'Placement':'badge-purple'
+        'Placement':'badge-purple', 'Approved':'badge-success', 'Interviewed':'badge-info'
     };
     return map[status] || 'badge-gray';
 }

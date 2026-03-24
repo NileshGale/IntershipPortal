@@ -114,7 +114,7 @@ switch ($action) {
     case 'update_application':
         $appId = intval($_POST['application_id'] ?? $_POST['id'] ?? 0);
         $newStatus = sanitizeInput($_POST['status']);
-        $valid = ['Shortlisted','Selected','Rejected','Interview Scheduled','Reviewed'];
+        $valid = ['Shortlisted','Selected','Rejected','Interview Scheduled','Reviewed','Approved'];
         if (in_array($newStatus, $valid)) {
             $check = $pdo->prepare("SELECT a.id, a.student_id, o.title FROM applications a JOIN opportunities o ON a.opportunity_id=o.id WHERE a.id=? AND o.company_id=?");
             $check->execute([$appId, $cid]); $app = $check->fetch();
@@ -171,6 +171,10 @@ switch ($action) {
     case 'complete_interview':
         $iid = intval($_POST['id']);
         $pdo->prepare("UPDATE interviews SET status='Completed' WHERE id=?")->execute([$iid]);
+        $appId = $pdo->prepare("SELECT application_id FROM interviews WHERE id=?"); $appId->execute([$iid]);
+        if ($aid = $appId->fetchColumn()) {
+            $pdo->prepare("UPDATE applications SET status='Interviewed' WHERE id=?")->execute([$aid]);
+        }
         echo json_encode(['success' => true]);
         break;
 
@@ -180,6 +184,12 @@ switch ($action) {
         $valid = ['Completed','Cancelled','Rescheduled'];
         if (in_array($newStatus, $valid)) {
             $pdo->prepare("UPDATE interviews SET status=? WHERE id=?")->execute([$newStatus, $iid]);
+            if ($newStatus === 'Completed') {
+                $appId = $pdo->prepare("SELECT application_id FROM interviews WHERE id=?"); $appId->execute([$iid]);
+                if ($aid = $appId->fetchColumn()) {
+                    $pdo->prepare("UPDATE applications SET status='Interviewed' WHERE id=?")->execute([$aid]);
+                }
+            }
             echo json_encode(['success' => true]);
         } else {
             echo json_encode(['success' => false]);
@@ -218,10 +228,14 @@ switch ($action) {
         try {
             if ($type === 'Placement') {
                 $pdo->prepare("INSERT INTO placements (student_id, company_id, job_title, salary, joining_date, status) VALUES (?,?,?,?,?,?)")->execute([$studentId, $cid, $jobTitle, $salary, $joiningDate, 'Offered']);
-                // We do NOT update placement_status='Placed' yet. The student must accept.
+                $pdo->prepare("UPDATE students SET placement_status='In Progress' WHERE id=?")->execute([$studentId]);
             } else {
                 $pdo->prepare("INSERT INTO internships (student_id, company_id, title, stipend, start_date, end_date) VALUES (?,?,?,?,?,?)")->execute([$studentId, $cid, $jobTitle, $salary, $joiningDate, $_POST['end_date'] ?? null]);
                 $pdo->prepare("UPDATE students SET internship_status='Active' WHERE id=?")->execute([$studentId]);
+            }
+
+            if (!empty($_POST['application_id'])) {
+                $pdo->prepare("UPDATE applications SET status='Selected' WHERE id=?")->execute([intval($_POST['application_id'])]);
             }
 
             $uid = $pdo->prepare("SELECT user_id FROM students WHERE id=?"); $uid->execute([$studentId]); $uid = $uid->fetchColumn();

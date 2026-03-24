@@ -5,6 +5,29 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Placement Drives | Admin</title>
     <link rel="stylesheet" href="../../css/style.css">
+    <style>
+        .modal-overlay {
+            display: none; position: fixed; inset: 0; background: rgba(0,0,0,.5);
+            z-index: 2000; align-items: center; justify-content: center;
+        }
+        .modal-overlay.open { display: flex; }
+        .modal-box {
+            background: var(--surface); border-radius: var(--radius); padding: 28px;
+            width: 100%; max-width: 540px; box-shadow: var(--shadow-lg);
+            max-height: 90vh; overflow-y: auto; animation: slideUp .25s ease;
+        }
+        @keyframes slideUp { from { transform: translateY(24px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        .modal-header {
+            display: flex; justify-content: space-between; align-items: center;
+            margin-bottom: 20px; padding-bottom: 14px; border-bottom: 1px solid var(--border);
+        }
+        .modal-header h3 { font-size: 1.05rem; font-weight: 700; }
+        .modal-close {
+            background: none; border: none; font-size: 1.3rem; cursor: pointer;
+            color: var(--text-muted); transition: color .2s;
+        }
+        .modal-close:hover { color: var(--danger); }
+    </style>
 </head>
 <body class="layout-admin">
     <div class="sidebar" id="sidebar"></div>
@@ -60,15 +83,34 @@
                                     <th>Drive Details</th>
                                     <th>Date</th>
                                     <th>Venue</th>
+                                    <th>Applicants</th>
                                     <th>Status</th>
                                 </tr>
                             </thead>
                             <tbody id="drivesBody">
-                                <tr><td colspan="4" class="text-center">Loading...</td></tr>
+                                <tr><td colspan="5" class="text-center">Loading...</td></tr>
                             </tbody>
                         </table>
                     </div>
                 </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Applicants Modal -->
+    <div class="modal-overlay" id="applicantsModal">
+        <div class="modal-box">
+            <div class="modal-header">
+                <h3>👥 Registered Applicants</h3>
+                <button class="modal-close" onclick="document.getElementById('applicantsModal').classList.remove('open')">&times;</button>
+            </div>
+            <div class="table-wrapper">
+                <table>
+                    <thead><tr><th>Student</th><th>Roll No.</th><th>Branch</th><th>CGPA</th></tr></thead>
+                    <tbody id="appModalBody">
+                        <tr><td colspan="4" class="text-center">Loading...</td></tr>
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>

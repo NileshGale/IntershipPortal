@@ -225,6 +225,26 @@ async function initOpportunities() {
 }
 
 // ── Placement Drives ────────────────────────────────────────
+window.viewApplicants = async (id) => {
+    document.getElementById('applicantsModal').classList.add('open');
+    const tbody = document.getElementById('appModalBody');
+    tbody.innerHTML = '<tr><td colspan="4" class="text-center">Loading...</td></tr>';
+    
+    const r = await fetch(`${API_BASE}admin.php?action=get_drive_applicants&drive_id=${id}`).then(res=>res.json());
+    if (r.applicants && r.applicants.length > 0) {
+        tbody.innerHTML = r.applicants.map(a => `
+            <tr>
+                <td>${a.first_name} ${a.last_name}</td>
+                <td>${a.roll_number || '-'}</td>
+                <td>${a.branch || '-'}</td>
+                <td>${a.cgpa || '-'}</td>
+            </tr>
+        `).join('');
+    } else {
+        tbody.innerHTML = '<tr><td colspan="4" class="text-center">No applicants yet.</td></tr>';
+    }
+};
+
 async function initDrives() {
     const r = await apiCall('admin', 'get_drives');
     
@@ -244,6 +264,9 @@ async function initDrives() {
                 <td>${formatDate(d.drive_date)}</td>
                 <td>${d.venue || 'TBA'}</td>
                 <td>
+                    <button class="btn btn-sm btn-outline" onclick="viewApplicants(${d.id})">${d.applicants || 0} Registered</button>
+                </td>
+                <td>
                     <select class="form-select" style="font-size:.8rem; padding:4px 8px; width:auto;" onchange="updateDriveStatus(${d.id}, this.value)">
                         <option value="Upcoming" ${d.status==='Upcoming'?'selected':''}>Upcoming</option>
                         <option value="Ongoing" ${d.status==='Ongoing'?'selected':''}>Ongoing</option>
@@ -252,7 +275,7 @@ async function initDrives() {
                     </select>
                 </td>
             </tr>
-        `).join('') || '<tr><td colspan="4" class="text-center">No drives scheduled</td></tr>';
+        `).join('') || '<tr><td colspan="5" class="text-center">No drives scheduled</td></tr>';
     }
 
     const form = document.getElementById('addDriveForm');

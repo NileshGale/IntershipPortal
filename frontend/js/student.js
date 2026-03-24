@@ -213,6 +213,18 @@ window.applyForJob = async (id, title) => {
     }
 };
 
+window.registerDrive = async (id) => {
+    if (!confirm('Register for this campus drive?')) return;
+    const fd = new FormData(); fd.append('drive_id', id);
+    const r = await apiCall('student', 'register_drive', fd);
+    if(r.success) {
+        showFlash('Successfully registered!', 'success');
+        document.getElementById('searchForm').dispatchEvent(new Event('submit'));
+    } else {
+        showFlash(r.message || 'Registration failed', 'error');
+    }
+};
+
 async function initOpportunities() {
     const form = document.getElementById('searchForm');
     const box = document.getElementById('oppsBox');
@@ -239,7 +251,12 @@ async function initOpportunities() {
                         <strong>Eligibility:</strong> ${d.eligibility_criteria || 'Not specified'}<br>
                         <strong>Rounds:</strong> ${d.rounds || 'Not specified'}
                     </div>
-                    <p style="font-size:.88rem; margin-bottom:0">${d.description || ''}</p>
+                    <div style="display:flex; justify-content:space-between; align-items:flex-end; border-top:1px solid var(--border); padding-top:12px;">
+                        <p style="font-size:.88rem; margin-bottom:0; flex:1;">${d.description || ''}</p>
+                        ${r.registered_drives && r.registered_drives.includes(d.id)
+                            ? '<span class="badge badge-success">✓ Applied</span>'
+                            : `<button class="btn btn-sm btn-primary" onclick="registerDrive(${d.id})">Apply Now</button>`}
+                    </div>
                 </div>
             `).join('') || '<div class="text-center" style="padding:20px; color:var(--text-muted)">No upcoming campus drives.</div>';
         }

@@ -146,9 +146,16 @@ switch ($action) {
 
     // ── Drives ───────────────────────────────────────────────
     case 'get_drives':
-        $drives = $pdo->query("SELECT pd.*, c.company_name FROM placement_drives pd LEFT JOIN companies c ON pd.company_id=c.id ORDER BY pd.drive_date DESC")->fetchAll();
+        $drives = $pdo->query("SELECT pd.*, c.company_name, (SELECT COUNT(*) FROM drive_registrations WHERE drive_id=pd.id) as applicants FROM placement_drives pd LEFT JOIN companies c ON pd.company_id=c.id ORDER BY pd.drive_date DESC")->fetchAll();
         $companies = $pdo->query("SELECT id, company_name FROM companies WHERE is_approved=1 ORDER BY company_name")->fetchAll();
         echo json_encode(['drives' => $drives, 'companies' => $companies]);
+        break;
+
+    case 'get_drive_applicants':
+        $did = intval($_GET['drive_id'] ?? 0);
+        $applicants = $pdo->prepare("SELECT s.id, s.first_name, s.last_name, s.roll_number, s.branch, s.cgpa FROM drive_registrations dr JOIN students s ON dr.student_id=s.id WHERE dr.drive_id=?");
+        $applicants->execute([$did]);
+        echo json_encode(['applicants' => $applicants->fetchAll()]);
         break;
 
     case 'add_drive':

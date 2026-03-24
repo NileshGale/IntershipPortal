@@ -126,7 +126,9 @@ switch ($action) {
         // Also fetch Upcoming/Ongoing Placement Drives
         $drives = $pdo->query("SELECT pd.*, c.company_name FROM placement_drives pd LEFT JOIN companies c ON pd.company_id=c.id WHERE pd.status IN ('Upcoming', 'Ongoing') ORDER BY pd.drive_date ASC")->fetchAll();
 
-        echo json_encode(['opportunities' => $opps->fetchAll(), 'drives' => $drives]);
+        $registered = $pdo->query("SELECT drive_id FROM drive_registrations WHERE student_id={$sid}")->fetchAll(PDO::FETCH_COLUMN);
+
+        echo json_encode(['opportunities' => $opps->fetchAll(), 'drives' => $drives, 'registered_drives' => $registered]);
         break;
 
     case 'apply':
@@ -139,6 +141,20 @@ switch ($action) {
             echo json_encode(['success' => true]);
         } else {
             echo json_encode(['success' => false, 'message' => 'Already applied']);
+        }
+        break;
+
+    case 'register_drive':
+        $did = intval($_POST['drive_id'] ?? 0);
+        if ($did && $sid) {
+            try {
+                $pdo->prepare("INSERT INTO drive_registrations (drive_id, student_id) VALUES (?, ?)")->execute([$did, $sid]);
+                echo json_encode(['success' => true]);
+            } catch (Exception $e) {
+                echo json_encode(['success' => false, 'message' => 'Already registered.']);
+            }
+        } else {
+            echo json_encode(['success' => false]);
         }
         break;
 

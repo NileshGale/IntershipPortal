@@ -228,14 +228,20 @@ switch ($action) {
         $pdo->prepare("INSERT INTO placements (student_id, company_id, job_title, salary, joining_date, status) VALUES (?,?,?,?,?,?)")
             ->execute([$studentId, $companyId, $jobTitle, $salary, $joiningDate ?: null, $status]);
 
-        // Update student placement status
-        $pdo->prepare("UPDATE students SET placement_status='Placed' WHERE id=?")->execute([$studentId]);
+        // Update student placement status ONLY if Accepted or Joined
+        if (in_array($status, ['Accepted', 'Joined'])) {
+            $pdo->prepare("UPDATE students SET placement_status='Placed' WHERE id=?")->execute([$studentId]);
+        }
 
         // Send notification to the student
         $stu = $pdo->prepare("SELECT user_id, first_name FROM students WHERE id=?"); $stu->execute([$studentId]); $stu = $stu->fetch();
         $comp = $pdo->prepare("SELECT company_name FROM companies WHERE id=?"); $comp->execute([$companyId]); $comp = $comp->fetch();
         if ($stu && $comp) {
-            sendNotification($pdo, $stu['user_id'], '🎉 Placement Recorded!', "Congratulations {$stu['first_name']}! You have been placed at {$comp['company_name']} as {$jobTitle}.", 'Success');
+            if (in_array($status, ['Accepted', 'Joined'])) {
+                sendNotification($pdo, $stu['user_id'], '🎉 Placement Recorded!', "Congratulations {$stu['first_name']}! You have been placed at {$comp['company_name']} as {$jobTitle}.", 'Success');
+            } else {
+                sendNotification($pdo, $stu['user_id'], '📌 Placement Offer', "You have received an offer for {$jobTitle} from {$comp['company_name']}. Please review it in your dashboard.", 'Info');
+            }
         }
 
         echo json_encode(['success' => true]);

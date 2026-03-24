@@ -42,7 +42,7 @@ async function initDashboard() {
     // Recent Apps
     const atb = document.getElementById('recentAppsBody');
     if (atb) {
-        atb.innerHTML = r.recentApps.map(a => `
+        atb.innerHTML = (r.recentApps || []).map(a => `
             <tr>
                 <td><strong>${a.student_name}</strong><br><small>${a.branch}</small></td>
                 <td>${a.title}</td>
@@ -113,8 +113,8 @@ async function initOpportunities() {
     const res = await apiCall('company', 'get_opportunities');
     
     if(!res.is_approved) {
-        document.getElementById('postOppFormBtn').disabled = true;
-        document.getElementById('postOppFormBtn').title = "Account pending approval";
+        const btn = document.getElementById('postOppFormBtn');
+        if (btn) { btn.disabled = true; btn.title = 'Account pending approval'; }
     }
 
     const tbody = document.getElementById('oppsBody');
@@ -300,6 +300,8 @@ window.extendOfferModal = (appId, studentName, title) => {
     document.getElementById('offer_app_id').value = appId;
     document.getElementById('offer_student_name').textContent = studentName;
     document.getElementById('offer_title').textContent = title;
+    const jtField = document.getElementById('offer_job_title');
+    if (jtField) jtField.value = title;
     document.getElementById('offerModal').style.display = 'flex';
 };
 

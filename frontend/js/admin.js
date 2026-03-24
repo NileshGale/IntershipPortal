@@ -31,7 +31,7 @@ async function initDashboard() {
     // Render Stats
     document.getElementById('stat-students').textContent = res.stats.total_students;
     document.getElementById('stat-companies').textContent = res.stats.total_companies;
-    document.getElementById('stat-opps').textContent = res.stats.active_opportunities;
+    document.getElementById('stat-opps').textContent = res.stats.open_opportunities;
     document.getElementById('stat-placed').textContent = res.stats.placed_students;
 
     // Render Recent Students

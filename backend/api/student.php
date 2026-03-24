@@ -122,7 +122,11 @@ switch ($action) {
         if (!empty($_GET['search'])) { $where .= " AND (o.title LIKE ? OR c.company_name LIKE ?)"; $s='%'.$_GET['search'].'%'; $params[]=$s; $params[]=$s; }
         $opps = $pdo->prepare("SELECT o.*, c.company_name, (SELECT id FROM applications WHERE student_id={$sid} AND opportunity_id=o.id) as already_applied FROM opportunities o JOIN companies c ON o.company_id=c.id WHERE $where ORDER BY o.created_at DESC");
         $opps->execute($params);
-        echo json_encode(['opportunities' => $opps->fetchAll()]);
+
+        // Also fetch Upcoming/Ongoing Placement Drives
+        $drives = $pdo->query("SELECT pd.*, c.company_name FROM placement_drives pd LEFT JOIN companies c ON pd.company_id=c.id WHERE pd.status IN ('Upcoming', 'Ongoing') ORDER BY pd.drive_date ASC")->fetchAll();
+
+        echo json_encode(['opportunities' => $opps->fetchAll(), 'drives' => $drives]);
         break;
 
     case 'apply':
@@ -186,6 +190,38 @@ switch ($action) {
         $p = $pdo->prepare("SELECT p.*, c.company_name, c.website, c.address as company_address FROM placements p JOIN companies c ON p.company_id=c.id WHERE p.student_id=? ORDER BY p.created_at DESC");
         $p->execute([$sid]);
         echo json_encode(['placements' => $p->fetchAll()]);
+        break;
+
+    case 'respond_offer':
+        $pid = intval($_POST['id']);
+        $resp = $_POST['response'] === 'accept' ? 'Accepted' : 'Declined';
+        $check = $pdo->prepare("SELECT p.id, p.company_id, p.job_title, c.company_name FROM placements p JOIN companies c ON p.company_id=c.id WHERE p.id=? AND p.student_id=?");
+        $check->execute([$pid, $sid]);
+        $placement = $check->fetch();
+        if ($placement) {
+            $pdo->prepare("UPDATE placements SET status=? WHERE id=?")->execute([$resp, $pid]);
+            if ($resp === 'Accepted') {
+                $pdo->prepare("UPDATE students SET placement_status='Placed' WHERE id=?")->execute([$sid]);
+            } else {
+                $pdo->prepare("UPDATE students SET placement_status='Not Placed' WHERE id=? AND placement_status='Placed'")->execute([$sid]);
+            }
+            
+            // Notify Admin
+            $admins = $pdo->query("SELECT id FROM users WHERE role='admin' AND is_active=1")->fetchAll();
+            $msg = "Student {$student['first_name']} {$student['last_name']} has $resp the offer for {$placement['job_title']} at {$placement['company_name']}.";
+            foreach ($admins as $ad) {
+                sendNotification($pdo, $ad['id'], "Offer $resp", $msg, 'Info');
+            }
+            // Notify Company
+            $compUser = $pdo->prepare("SELECT user_id FROM companies WHERE id=?"); $compUser->execute([$placement['company_id']]); $cuid = $compUser->fetchColumn();
+            if ($cuid) {
+                sendNotification($pdo, $cuid, "Offer $resp", "Student {$student['first_name']} {$student['last_name']} has $resp your offer for {$placement['job_title']}.", 'Info');
+            }
+
+            echo json_encode(['success' => true]);
+        } else {
+            echo json_encode(['success' => false, 'message' => 'Placement offer not found.']);
+        }
         break;
 
     // ── Notifications ────────────────────────────────────────

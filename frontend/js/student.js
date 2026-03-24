@@ -35,11 +35,17 @@ async function initDashboard() {
     // Current Status Card
     const csc = document.getElementById('currentStatusCard');
     if (csc) {
-        if (r.placement) {
+        if (r.placement && (r.placement.status === 'Accepted' || r.placement.status === 'Joined')) {
             csc.innerHTML = `
                 <div class="alert alert-success mt-3" style="font-size:1.1rem">
                     🎉 Congratulations! You are placed at <strong>${r.placement.company_name}</strong>.
                     <a href="placement.html" class="btn btn-sm btn-outline ml-3">View Details & Offer Letter ↗</a>
+                </div>`;
+        } else if (r.placement && r.placement.status === 'Offered') {
+            csc.innerHTML = `
+                <div class="alert alert-info mt-3" style="font-size:1.1rem">
+                    📌 You have a new placement offer from <strong>${r.placement.company_name}</strong>.
+                    <a href="placement.html" class="btn btn-sm btn-outline ml-3">Review Offer ↗</a>
                 </div>`;
         } else if (r.internship) {
             csc.innerHTML = `
@@ -210,11 +216,34 @@ window.applyForJob = async (id, title) => {
 async function initOpportunities() {
     const form = document.getElementById('searchForm');
     const box = document.getElementById('oppsBox');
+    const dBox = document.getElementById('drivesBox');
 
     const load = async () => {
         const q = new URLSearchParams(new FormData(form)).toString();
         const r = await fetch(`${API_BASE}student.php?action=get_opportunities&${q}`).then(res=>res.json());
         
+        if (dBox && r.drives) {
+            dBox.innerHTML = r.drives.map(d => `
+                <div class="card" style="margin-bottom:16px; border-left: 4px solid var(--primary);">
+                    <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:12px;">
+                        <div>
+                            <h3 style="font-size:1.1rem; margin-bottom:4px;">${d.title} <span class="badge ${d.status==='Upcoming'?'badge-info':'badge-success'}">${d.status}</span></h3>
+                            <div style="color:var(--primary); font-weight:600;">${d.company_name || 'Open Pool Drive'}</div>
+                        </div>
+                        <div style="text-align:right">
+                            <strong style="color:var(--danger)">📅 ${formatDate(d.drive_date)}</strong><br>
+                            <small>📍 ${d.venue || 'TBA'}</small>
+                        </div>
+                    </div>
+                    <div style="font-size:.85rem; color:var(--text); margin-bottom:12px;">
+                        <strong>Eligibility:</strong> ${d.eligibility_criteria || 'Not specified'}<br>
+                        <strong>Rounds:</strong> ${d.rounds || 'Not specified'}
+                    </div>
+                    <p style="font-size:.88rem; margin-bottom:0">${d.description || ''}</p>
+                </div>
+            `).join('') || '<div class="text-center" style="padding:20px; color:var(--text-muted)">No upcoming campus drives.</div>';
+        }
+
         box.innerHTML = r.opportunities.map(o => `
             <div class="card" style="margin-bottom:16px;">
                 <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:12px;">
@@ -336,6 +365,19 @@ async function initInternship() {
 }
 
 // ── Placements ──────────────────────────────────────────────
+window.respondOffer = async (id, resp) => {
+    const actionStr = resp === 'accept' ? 'Accept' : 'Decline';
+    if (!confirm(`Are you sure you want to ${actionStr} this placement offer?`)) return;
+    const fd = new FormData(); fd.append('id', id); fd.append('response', resp);
+    const r = await apiCall('student', 'respond_offer', fd);
+    if(r.success) {
+        showFlash(`Offer ${actionStr}ed successfully!`, 'success');
+        setTimeout(() => location.reload(), 1000);
+    } else {
+        showFlash(r.message || 'Failed to respond', 'error');
+    }
+};
+
 async function initPlacement() {
     const r = await apiCall('student', 'get_placement');
     const tbody = document.getElementById('placementsBody');
@@ -350,7 +392,8 @@ async function initPlacement() {
                 <td>
                     ${p.offer_letter 
                         ? `<a href="/CareerFlow/uploads/offer_letters/${p.offer_letter}" target="_blank" class="btn btn-sm btn-outline" download>📥 Download</a>`
-                        : 'Pending HR Upload'}
+                        : '<span style="color:var(--text-muted); font-size:0.85rem">Pending HR Upload</span>'}
+                    ${p.status === 'Offered' ? `<br><div style="margin-top:8px"><button class="btn btn-sm btn-success" onclick="respondOffer(${p.id}, 'accept')">Accept</button> <button class="btn btn-sm btn-danger" onclick="respondOffer(${p.id}, 'decline')">Decline</button></div>` : ''}
                 </td>
             </tr>
         `).join('') || '<tr><td colspan="6" class="text-center">No placement records found. Keep applying!</td></tr>';

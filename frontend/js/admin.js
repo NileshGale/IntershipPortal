@@ -20,6 +20,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     else if (path.includes('announcements.html')) initAnnouncements();
     else if (path.includes('reports.html')) initReports();
     else if (path.includes('users.html')) initUsers();
+    else if (path.includes('approvals.html')) initApprovals();
 });
 
 // ── Dashboard ───────────────────────────────────────────────
@@ -351,6 +352,97 @@ async function initPlacements() {
             </tr>
         `).join('') || '<tr><td colspan="6" class="text-center">No placements recorded yet</td></tr>';
     }
+
+    // ── Populate modal dropdowns ─────────────────────────────
+    const listRes = await apiCall('admin', 'get_students_list');
+    const allStudents = listRes.students || [];
+    const allCompanies = listRes.companies || [];
+
+    // Populate company select
+    const compSel = document.getElementById('companySelect');
+    if (compSel) {
+        compSel.innerHTML = '<option value="">-- Select Company --</option>' +
+            allCompanies.map(c => `<option value="${c.id}">${c.company_name}</option>`).join('');
+    }
+
+    // ── Searchable student input ─────────────────────────────
+    const searchInput = document.getElementById('studentSearch');
+    const dropdown = document.getElementById('studentDropdown');
+    const hiddenId = document.getElementById('selectedStudentId');
+
+    if (searchInput && dropdown) {
+        searchInput.addEventListener('input', () => {
+            const val = searchInput.value.toLowerCase().trim();
+            hiddenId.value = ''; // clear selection when typing
+            if (!val) { dropdown.classList.remove('open'); return; }
+
+            const filtered = allStudents.filter(s => 
+                `${s.first_name} ${s.last_name}`.toLowerCase().includes(val) ||
+                (s.roll_number && s.roll_number.toLowerCase().includes(val))
+            ).slice(0, 15);
+
+            if (filtered.length === 0) {
+                dropdown.innerHTML = '<div class="sd-item" style="color:var(--text-muted);cursor:default;">No students found</div>';
+            } else {
+                dropdown.innerHTML = filtered.map(s => `
+                    <div class="sd-item" data-id="${s.id}">
+                        <strong>${s.first_name} ${s.last_name}</strong>
+                        <span style="float:right;color:var(--text-muted);font-size:.78rem;">${s.roll_number || ''} · ${s.branch || ''}</span>
+                        ${s.placement_status === 'Placed' ? '<br><small style="color:var(--warning)">⚠ Already Placed</small>' : ''}
+                    </div>
+                `).join('');
+            }
+            dropdown.classList.add('open');
+        });
+
+        dropdown.addEventListener('click', (e) => {
+            const item = e.target.closest('.sd-item');
+            if (!item || !item.dataset.id) return;
+            const s = allStudents.find(st => st.id == item.dataset.id);
+            if (s) {
+                searchInput.value = `${s.first_name} ${s.last_name} (${s.roll_number || 'N/A'})`;
+                hiddenId.value = s.id;
+                dropdown.classList.remove('open');
+            }
+        });
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!e.target.closest('.student-search-wrap')) dropdown.classList.remove('open');
+        });
+    }
+
+    // ── Form submission ──────────────────────────────────────
+    const form = document.getElementById('addPlacementForm');
+    if (form) {
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            if (!hiddenId.value) {
+                showFlash('Please select a student from the dropdown.', 'error');
+                searchInput.focus();
+                return;
+            }
+
+            const btn = document.getElementById('submitPlacementBtn');
+            btn.disabled = true; btn.textContent = 'Saving...';
+
+            const fd = new FormData(form);
+            const res = await apiCall('admin', 'add_placement', fd);
+
+            if (res.success) {
+                showFlash('✅ Placement recorded successfully!');
+                document.getElementById('placementModal').classList.remove('open');
+                form.reset();
+                hiddenId.value = '';
+                // Reload the page to reflect new data
+                setTimeout(() => window.location.reload(), 1000);
+            } else {
+                showFlash(res.message || 'Failed to record placement', 'error');
+                btn.disabled = false; btn.textContent = '💾 Save Placement';
+            }
+        });
+    }
 }
 
 // ── Announcements ───────────────────────────────────────────
@@ -449,3 +541,55 @@ async function initUsers() {
         `).join('') || '<tr><td colspan="6" class="text-center">No users</td></tr>';
     }
 }
+
+// ── Approvals ───────────────────────────────────────────────
+async function initApprovals() {
+    const r = await apiCall('admin', 'get_approvals');
+    const cBody = document.getElementById('companyApprovalsBody');
+    const sBody = document.getElementById('studentApprovalsBody');
+    
+    if (cBody && r.companies) {
+        cBody.innerHTML = r.companies.map(c => `
+            <tr>
+                <td><strong>${c.company_name}</strong><br><small>${c.industry || '—'}</small></td>
+                <td>${c.hr_name || '—'}</td>
+                <td>${c.email}</td>
+                <td>${formatDate(c.created_at)}</td>
+                <td><span class="badge ${c.is_active ? 'badge-success' : 'badge-warning'}">${c.is_active ? 'Approved' : 'Pending'}</span></td>
+                <td>
+                    ${!c.is_active ? `
+                        <button class="btn btn-sm btn-success" onclick="toggleUser(${c.id}, 1)">Approve</button>
+                        <button class="btn btn-sm btn-danger" onclick="deleteUser(${c.id})">Reject (Delete)</button>
+                    ` : '<span style="color:var(--text-muted);font-size:.8rem;">Approved</span>'}
+                </td>
+            </tr>
+        `).join('') || '<tr><td colspan="6" class="text-center">No company approvals</td></tr>';
+    }
+
+    if (sBody && r.students) {
+        sBody.innerHTML = r.students.map(s => `
+            <tr>
+                <td><strong>${s.first_name} ${s.last_name}</strong></td>
+                <td>${s.roll_number || '—'} <br><small>${s.branch || '—'}</small></td>
+                <td>${s.email}</td>
+                <td>${formatDate(s.created_at)}</td>
+                <td><span class="badge ${s.is_active ? 'badge-success' : 'badge-warning'}">${s.is_active ? 'Approved' : 'Pending'}</span></td>
+                <td>
+                    ${!s.is_active ? `
+                        <button class="btn btn-sm btn-success" onclick="toggleUser(${s.id}, 1)">Approve</button>
+                        <button class="btn btn-sm btn-danger" onclick="deleteUser(${s.id})">Reject (Delete)</button>
+                    ` : '<span style="color:var(--text-muted);font-size:.8rem;">Approved</span>'}
+                </td>
+            </tr>
+        `).join('') || '<tr><td colspan="6" class="text-center">No student approvals</td></tr>';
+    }
+}
+
+// Global action to completely delete a pending registration
+window.deleteUser = async (id) => {
+    if (!confirm('Are you sure you want to REJECT and DELETE this registration? This cannot be undone.')) return;
+    const fd = new FormData(); fd.append('id', id);
+    const r = await apiCall('admin', 'delete_user', fd);
+    if(r.success) window.location.reload();
+    else alert('Failed to delete user');
+};

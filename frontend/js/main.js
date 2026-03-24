@@ -210,12 +210,20 @@ function formatDate(dateStr) {
 }
 
 function showFlash(message, type = 'success') {
+    let container = document.getElementById('toast-container');
+    if (!container) {
+        container = document.createElement('div');
+        container.id = 'toast-container';
+        document.body.appendChild(container);
+    }
     const div = document.createElement('div');
     div.className = `alert alert-${type}`;
     div.innerHTML = message;
-    const content = document.querySelector('.page-content') || document.body;
-    content.insertBefore(div, content.firstChild);
-    setTimeout(() => div.remove(), 5000);
+    container.appendChild(div);
+    setTimeout(() => {
+        div.style.opacity = '0';
+        setTimeout(() => div.remove(), 300);
+    }, 4700);
 }
 
 // Global click handler to close dropdowns

@@ -55,20 +55,26 @@ switch ($action) {
             break;
         }
 
-        $stmt = $pdo->prepare("SELECT * FROM users WHERE email = ? AND is_active = 1");
+        $stmt = $pdo->prepare("SELECT * FROM users WHERE email = ?");
         $stmt->execute([$email]);
         $user = $stmt->fetch();
 
-        if ($user && verifyPassword($password, $user['password'])) {
-            session_regenerate_id(true);
-            $_SESSION['user_id']       = $user['id'];
-            $_SESSION['role']          = $user['role'];
-            $_SESSION['email']         = $user['email'];
-            $_SESSION['last_activity'] = time();
-            echo json_encode(['success' => true, 'role' => $user['role']]);
-        } else {
+        if (!$user || !verifyPassword($password, $user['password'])) {
             echo json_encode(['success' => false, 'message' => 'Invalid email or password.']);
+            break;
         }
+
+        if ($user['role'] !== 'admin' && $user['is_active'] == 0) {
+            echo json_encode(['success' => false, 'message' => 'Your account is pending admin approval.']);
+            break;
+        }
+
+        session_regenerate_id(true);
+        $_SESSION['user_id']       = $user['id'];
+        $_SESSION['role']          = $user['role'];
+        $_SESSION['email']         = $user['email'];
+        $_SESSION['last_activity'] = time();
+        echo json_encode(['success' => true, 'role' => $user['role']]);
         break;
 
     // ── Register - Send OTP ──────────────────────────────────
@@ -142,7 +148,7 @@ switch ($action) {
             $password = $regData['password'];
             $hashed   = hashPassword($password);
             
-            $stmt = $pdo->prepare("INSERT INTO users (email, password, role, is_active) VALUES (?, ?, ?, 1)");
+            $stmt = $pdo->prepare("INSERT INTO users (email, password, role, is_active) VALUES (?, ?, ?, 0)");
             $stmt->execute([$email, $hashed, $role]);
             $userId = $pdo->lastInsertId();
 

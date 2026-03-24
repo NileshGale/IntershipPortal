@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Approve Users | Admin</title>
+    <link rel="stylesheet" href="../../css/style.css">
+</head>
+<body class="layout-admin">
+    <div class="sidebar" id="sidebar"></div>
+    <div class="main-wrapper">
+        <div class="topbar" id="topbar"></div>
+        <div class="page-content">
+            
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">User Approvals</h2>
+                </div>
+                
+                <div class="tabs" style="border-bottom: 2px solid var(--border); margin-bottom: 20px; display: flex; gap: 20px;">
+                    <button class="tab-btn active" data-tab="tab-companies" style="background: none; border: none; padding: 10px 15px; font-weight: 600; font-size: 1rem; color: var(--text-muted); cursor: pointer; border-bottom: 2px solid transparent; margin-bottom: -2px;">Company Approvals</button>
+                    <button class="tab-btn" data-tab="tab-students" style="background: none; border: none; padding: 10px 15px; font-weight: 600; font-size: 1rem; color: var(--text-muted); cursor: pointer; border-bottom: 2px solid transparent; margin-bottom: -2px;">Student Approvals</button>
+                </div>
+                
+                <!-- Company Approvals Tab -->
+                <div id="tab-companies" class="tab-content active" style="display:block;">
+                    <div class="table-wrapper">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Company Name</th>
+                                    <th>HR Contact</th>
+                                    <th>Email</th>
+                                    <th>Registered On</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="companyApprovalsBody">
+                                <tr><td colspan="6" class="text-center">Loading...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                
+                <!-- Student Approvals Tab -->
+                <div id="tab-students" class="tab-content" style="display:none;">
+                    <div class="table-wrapper">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Student Name</th>
+                                    <th>Roll / Branch</th>
+                                    <th>Email</th>
+                                    <th>Registered On</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="studentApprovalsBody">
+                                <tr><td colspan="6" class="text-center">Loading...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="../../js/main.js"></script>
+    <script src="../../js/admin.js"></script>
+    <script>
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const target = this.dataset.tab;
+                document.querySelectorAll('.tab-btn').forEach(b => {
+                    b.classList.remove('active');
+                    b.style.color = 'var(--text-muted)';
+                    b.style.borderBottomColor = 'transparent';
+                });
+                document.querySelectorAll('.tab-content').forEach(tc => tc.style.display = 'none');
+                
+                this.classList.add('active');
+                this.style.color = 'var(--primary)';
+                this.style.borderBottomColor = 'var(--primary)';
+                document.getElementById(target).style.display = 'block';
+            });
+        });
+        
+        // Initial setup for the active button styles
+        const activeBtn = document.querySelector('.tab-btn.active');
+        if (activeBtn) {
+            activeBtn.style.color = 'var(--primary)';
+            activeBtn.style.borderBottomColor = 'var(--primary)';
+        }
+    </script>
+</body>
+</html>

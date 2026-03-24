@@ -5,6 +5,46 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Placements | Admin</title>
     <link rel="stylesheet" href="../../css/style.css">
+    <style>
+        .modal-overlay {
+            display: none; position: fixed; inset: 0; background: rgba(0,0,0,.5);
+            z-index: 2000; align-items: center; justify-content: center;
+        }
+        .modal-overlay.open { display: flex; }
+        .modal-box {
+            background: var(--surface); border-radius: var(--radius); padding: 28px;
+            width: 100%; max-width: 540px; box-shadow: var(--shadow-lg);
+            max-height: 90vh; overflow-y: auto; animation: slideUp .25s ease;
+        }
+        @keyframes slideUp {
+            from { transform: translateY(24px); opacity: 0; }
+            to   { transform: translateY(0); opacity: 1; }
+        }
+        .modal-header {
+            display: flex; justify-content: space-between; align-items: center;
+            margin-bottom: 20px; padding-bottom: 14px; border-bottom: 1px solid var(--border);
+        }
+        .modal-header h3 { font-size: 1.05rem; font-weight: 700; }
+        .modal-close {
+            background: none; border: none; font-size: 1.3rem; cursor: pointer;
+            color: var(--text-muted); transition: color .2s;
+        }
+        .modal-close:hover { color: var(--danger); }
+        .student-search-wrap { position: relative; }
+        .student-dropdown {
+            position: absolute; top: 100%; left: 0; right: 0; z-index: 10;
+            background: var(--surface); border: 1px solid var(--border);
+            border-radius: 0 0 8px 8px; max-height: 180px; overflow-y: auto;
+            box-shadow: var(--shadow-md); display: none;
+        }
+        .student-dropdown.open { display: block; }
+        .student-dropdown .sd-item {
+            padding: 8px 12px; cursor: pointer; font-size: .85rem;
+            border-bottom: 1px solid var(--border); transition: background .15s;
+        }
+        .student-dropdown .sd-item:hover { background: var(--primary-light); }
+        .student-dropdown .sd-item:last-child { border-bottom: none; }
+    </style>
 </head>
 <body class="layout-admin">
     <div class="sidebar" id="sidebar"></div>
@@ -26,6 +66,9 @@
             <div class="card">
                 <div class="card-header">
                     <h2 class="card-title">Placement Records</h2>
+                    <button class="btn btn-primary" id="btnAddPlacement" onclick="document.getElementById('placementModal').classList.add('open')">
+                        ➕ Record New Placement
+                    </button>
                 </div>
                 <div class="table-wrapper">
                     <table>
@@ -47,6 +90,57 @@
             </div>
         </div>
     </div>
+
+    <!-- Add Placement Modal -->
+    <div class="modal-overlay" id="placementModal">
+        <div class="modal-box">
+            <div class="modal-header">
+                <h3>📋 Record New Placement</h3>
+                <button class="modal-close" onclick="document.getElementById('placementModal').classList.remove('open')">&times;</button>
+            </div>
+            <form id="addPlacementForm" autocomplete="off">
+                <div class="form-group student-search-wrap">
+                    <label class="form-label">Student *</label>
+                    <input type="text" class="form-control" id="studentSearch" placeholder="Search by name or roll number..." required>
+                    <input type="hidden" name="student_id" id="selectedStudentId">
+                    <div class="student-dropdown" id="studentDropdown"></div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Company *</label>
+                    <select name="company_id" class="form-select" id="companySelect" required>
+                        <option value="">-- Select Company --</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Job Title *</label>
+                    <input type="text" name="job_title" class="form-control" placeholder="e.g. Software Developer" required>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Package (LPA) *</label>
+                        <input type="text" name="salary" class="form-control" placeholder="e.g. 8 LPA" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Joining Date</label>
+                        <input type="date" name="joining_date" class="form-control">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Status *</label>
+                    <select name="status" class="form-select" required>
+                        <option value="Offered">Offered</option>
+                        <option value="Accepted">Accepted</option>
+                        <option value="Joined">Joined</option>
+                    </select>
+                </div>
+                <div style="display:flex; gap:10px; justify-content:flex-end; margin-top:20px;">
+                    <button type="button" class="btn btn-outline" onclick="document.getElementById('placementModal').classList.remove('open')">Cancel</button>
+                    <button type="submit" class="btn btn-primary" id="submitPlacementBtn">💾 Save Placement</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <script src="../../js/main.js"></script>
     <script src="../../js/admin.js"></script>
 </body>

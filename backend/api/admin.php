@@ -212,6 +212,41 @@ switch ($action) {
         echo json_encode(['placements' => $placements, 'totalPlaced' => $totalPlaced, 'avgSalary' => $avgSalary ? number_format($avgSalary, 1) : null]);
         break;
 
+    case 'add_placement':
+        $studentId = intval($_POST['student_id'] ?? 0);
+        $companyId = intval($_POST['company_id'] ?? 0);
+        $jobTitle = sanitizeInput($_POST['job_title'] ?? '');
+        $salary = sanitizeInput($_POST['salary'] ?? '');
+        $joiningDate = $_POST['joining_date'] ?? null;
+        $status = sanitizeInput($_POST['status'] ?? 'Offered');
+
+        if (!$studentId || !$companyId || !$jobTitle) {
+            echo json_encode(['success' => false, 'message' => 'Student, company, and job title are required.']);
+            break;
+        }
+
+        $pdo->prepare("INSERT INTO placements (student_id, company_id, job_title, salary, joining_date, status) VALUES (?,?,?,?,?,?)")
+            ->execute([$studentId, $companyId, $jobTitle, $salary, $joiningDate ?: null, $status]);
+
+        // Update student placement status
+        $pdo->prepare("UPDATE students SET placement_status='Placed' WHERE id=?")->execute([$studentId]);
+
+        // Send notification to the student
+        $stu = $pdo->prepare("SELECT user_id, first_name FROM students WHERE id=?"); $stu->execute([$studentId]); $stu = $stu->fetch();
+        $comp = $pdo->prepare("SELECT company_name FROM companies WHERE id=?"); $comp->execute([$companyId]); $comp = $comp->fetch();
+        if ($stu && $comp) {
+            sendNotification($pdo, $stu['user_id'], '🎉 Placement Recorded!', "Congratulations {$stu['first_name']}! You have been placed at {$comp['company_name']} as {$jobTitle}.", 'Success');
+        }
+
+        echo json_encode(['success' => true]);
+        break;
+
+    case 'get_students_list':
+        $students = $pdo->query("SELECT s.id, s.first_name, s.last_name, s.roll_number, s.branch, s.placement_status FROM students s ORDER BY s.first_name, s.last_name")->fetchAll();
+        $companies = $pdo->query("SELECT id, company_name FROM companies WHERE is_approved=1 ORDER BY company_name")->fetchAll();
+        echo json_encode(['students' => $students, 'companies' => $companies]);
+        break;
+
     // ── Announcements ────────────────────────────────────────
     case 'get_announcements':
         echo json_encode(['announcements' => $pdo->query("SELECT * FROM announcements ORDER BY created_at DESC")->fetchAll()]);
@@ -249,11 +284,27 @@ switch ($action) {
         echo json_encode(['users' => $pdo->query("SELECT u.*, CASE WHEN u.role='student' THEN (SELECT CONCAT(first_name,' ',last_name) FROM students WHERE user_id=u.id) WHEN u.role='company' THEN (SELECT company_name FROM companies WHERE user_id=u.id) ELSE 'Admin' END as display_name FROM users u ORDER BY u.created_at DESC")->fetchAll(), 'current_user_id' => $_SESSION['user_id']]);
         break;
 
+    case 'get_approvals':
+        $students = $pdo->query("SELECT s.*, u.email, u.is_active, u.created_at as reg_date FROM students s JOIN users u ON s.user_id = u.id ORDER BY u.is_active ASC, u.created_at DESC")->fetchAll();
+        $companies = $pdo->query("SELECT c.*, u.email, u.is_active, u.created_at as reg_date FROM companies c JOIN users u ON c.user_id = u.id ORDER BY u.is_active ASC, u.created_at DESC")->fetchAll();
+        echo json_encode(['students' => $students, 'companies' => $companies]);
+        break;
+
     case 'toggle_user':
         $id = intval($_POST['id'] ?? 0);
         $active = intval($_POST['is_active'] ?? 0);
         if ($id != $_SESSION['user_id']) {
             $pdo->prepare("UPDATE users SET is_active=? WHERE id=?")->execute([$active, $id]);
+            // If it's a company, also sync is_approved just in case
+            $pdo->prepare("UPDATE companies SET is_approved=? WHERE user_id=?")->execute([$active, $id]);
+        }
+        echo json_encode(['success' => true]);
+        break;
+
+    case 'delete_user':
+        $id = intval($_POST['id'] ?? 0);
+        if ($id != $_SESSION['user_id']) {
+            $pdo->prepare("DELETE FROM users WHERE id=?")->execute([$id]);
         }
         echo json_encode(['success' => true]);
         break;

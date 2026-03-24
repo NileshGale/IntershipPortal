@@ -43,6 +43,13 @@ switch ($action) {
 
     // ── Login ────────────────────────────────────────────────
     case 'login':
+        // Clear any old session data first
+        if (session_status() === PHP_SESSION_ACTIVE) {
+            session_unset();
+        } else {
+            session_start();
+        }
+
         $email    = trim($_POST['email'] ?? '');
         $password = $_POST['password'] ?? '';
 

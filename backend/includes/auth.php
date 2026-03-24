@@ -9,6 +9,11 @@ define('SESSION_TIMEOUT', 1800);
 // Base URL constant
 define('BASE_URL', '/CareerFlow/backend');
 
+function isApiRequest() {
+    return (isset($_SERVER['HTTP_ACCEPT']) && strpos($_SERVER['HTTP_ACCEPT'], 'application/json') !== false) || 
+           (isset($_SERVER['REQUEST_URI']) && strpos($_SERVER['REQUEST_URI'], '/api/') !== false);
+}
+
 function startSecureSession() {
     if (session_status() === PHP_SESSION_NONE) {
         session_start();
@@ -16,6 +21,12 @@ function startSecureSession() {
     if (isset($_SESSION['last_activity']) && (time() - $_SESSION['last_activity']) > SESSION_TIMEOUT) {
         session_unset();
         session_destroy();
+        
+        if (isApiRequest()) {
+            // For API requests, don't redirect. Let the script handle the "not logged in" state.
+            return;
+        }
+        
         header("Location: " . BASE_URL . "/login.php?timeout=1");
         exit();
     }

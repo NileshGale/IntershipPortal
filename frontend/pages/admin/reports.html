@@ -23,8 +23,22 @@
             <!-- Placements Tab -->
             <div id="tab-placements" class="tab-content active">
                 <div class="card">
-                    <div class="card-header">
-                        <h3 class="card-title">All Offers (Placement)</h3>
+                    <div class="card-header" style="flex-wrap: wrap; gap: 16px;">
+                        <h3 class="card-title" style="flex: 1 1 100%;">All Offers (Placement)</h3>
+                        <div class="filter-bar" style="display: flex; gap: 12px; flex-grow: 1; align-items: center;">
+                            <select id="filterCompany" class="form-select" style="width: 200px;">
+                                <option value="">All Companies</option>
+                            </select>
+                            <input type="text" id="filterRole" class="form-control" placeholder="Search Role..." style="width: 150px;">
+                            <select id="filterStatus" class="form-select" style="width: 150px;">
+                                <option value="">All Statuses</option>
+                                <option value="Offered">Offered</option>
+                                <option value="Accepted">Accepted</option>
+                                <option value="Joined">Joined</option>
+                                <option value="Declined">Declined</option>
+                            </select>
+                            <button id="btnFilterPlacement" class="btn btn-outline btn-sm">🔍 Filter</button>
+                        </div>
                         <button onclick="exportCSV('placementTable')" class="btn btn-primary btn-sm">⬇ Export CSV</button>
                     </div>
                     <div class="table-wrapper" style="max-height: 500px; overflow-y: auto;">
@@ -41,8 +55,23 @@
             <!-- Internships Tab -->
             <div id="tab-internships" class="tab-content">
                 <div class="card">
-                    <div class="card-header">
-                        <h3 class="card-title">Active & Completed Internships</h3>
+                    <div class="card-header" style="flex-wrap: wrap; gap: 16px;">
+                        <h3 class="card-title" style="flex: 1 1 100%;">Active & Completed Internships</h3>
+                        <div class="filter-bar" style="display: flex; gap: 12px; flex-grow: 1; align-items: center;">
+                            <select id="filterCompanyIntern" class="form-select" style="width: 200px;">
+                                <option value="">All Companies</option>
+                            </select>
+                            <input type="text" id="filterRoleIntern" class="form-control" placeholder="Search Role..." style="width: 150px;">
+                            <select id="filterStatusIntern" class="form-select" style="width: 150px;">
+                                <option value="">All Statuses</option>
+                                <option value="Offered">Offered</option>
+                                <option value="Accepted">Accepted</option>
+                                <option value="Active">Active</option>
+                                <option value="Completed">Completed</option>
+                                <option value="Declined">Declined</option>
+                            </select>
+                            <button id="btnFilterInternship" class="btn btn-outline btn-sm">🔍 Filter</button>
+                        </div>
                         <button onclick="exportCSV('internTable')" class="btn btn-primary btn-sm">⬇ Export CSV</button>
                     </div>
                     <div class="table-wrapper" style="max-height: 500px; overflow-y: auto;">

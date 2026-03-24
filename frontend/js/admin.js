@@ -498,27 +498,82 @@ async function initAnnouncements() {
 
 // ── Reports ─────────────────────────────────────────────────
 async function initReports() {
-    const r = await apiCall('admin', 'get_reports');
+    const loadData = async () => {
+        const companyId = document.getElementById('filterCompany')?.value || '';
+        const role = document.getElementById('filterRole')?.value || '';
+        const status = document.getElementById('filterStatus')?.value || '';
+
+        const iCompanyId = document.getElementById('filterCompanyIntern')?.value || '';
+        const iRole = document.getElementById('filterRoleIntern')?.value || '';
+        const iStatus = document.getElementById('filterStatusIntern')?.value || '';
+        
+        const q = new URLSearchParams({ 
+            action: 'get_reports', 
+            company_id: companyId, 
+            role: role, 
+            status: status,
+            i_company_id: iCompanyId,
+            i_role: iRole,
+            i_status: iStatus
+        }).toString();
+        
+        try {
+            const res = await fetch(`${API_BASE}admin.php?${q}`).then(res => res.json());
+            
+            // 1. Populate Company Filters
+            const compFilter = document.getElementById('filterCompany');
+            const compFilterIntern = document.getElementById('filterCompanyIntern');
+            if (res.companies) {
+                const optionsHtml = '<option value="">All Companies</option>' + 
+                    res.companies.map(c => `<option value="${c.id}">${c.company_name}</option>`).join('');
+                
+                if (compFilter && compFilter.options.length <= 1) {
+                    compFilter.innerHTML = optionsHtml;
+                    if (companyId) compFilter.value = companyId;
+                }
+                if (compFilterIntern && compFilterIntern.options.length <= 1) {
+                    compFilterIntern.innerHTML = optionsHtml;
+                    if (iCompanyId) compFilterIntern.value = iCompanyId;
+                }
+            }
+
+        // 2. Render Tables
+        const pTbody = document.getElementById('placementBody');
+        if (pTbody) {
+            pTbody.innerHTML = res.placement.map(p => `<tr><td>${p.student_name}</td><td>${p.roll_number||'-'}</td><td>${p.branch||'-'}</td><td>${p.year||'-'}</td><td>${p.company_name}</td><td>${p.job_title}</td><td>${p.salary||'-'}</td><td>${formatDate(p.joining_date)}</td><td><span class="badge ${getBadgeClass(p.status)}">${p.status}</span></td></tr>`).join('') || '<tr><td colspan="9" class="text-center">No placement records found</td></tr>';
+        }
+
+        const iTbody = document.getElementById('internshipBody');
+        if (iTbody) {
+            iTbody.innerHTML = res.internship.map(i => `<tr><td>${i.student_name}</td><td>${i.roll_number||'-'}</td><td>${i.branch||'-'}</td><td>${i.company_name}</td><td>${i.title}</td><td>${formatDate(i.start_date)} - ${formatDate(i.end_date)}</td><td>${i.stipend||'-'}</td><td><span class="badge ${getBadgeClass(i.status)}">${i.status}</span></td></tr>`).join('') || '<tr><td colspan="8" class="text-center">No internship records found</td></tr>';
+        }
+
+        const cTbody = document.getElementById('companySummaryBody');
+        if (cTbody) {
+            cTbody.innerHTML = res.companySummary.map(c => `<tr><td><strong>${c.company_name}</strong></td><td>${c.total_opportunities}</td><td>${c.placements}</td><td>${c.internships}</td><td>${c.total_apps}</td><td><strong>${c.hired}</strong></td></tr>`).join('') || '<tr><td colspan="6" class="text-center">No company summary data</td></tr>';
+        }
+
+        const bTbody = document.getElementById('branchStatsBody');
+        if (bTbody) {
+            bTbody.innerHTML = res.branchStats.map(b => `<tr><td><strong>${b.branch}</strong></td><td>${b.total}</td><td>${b.avg_cgpa||'-'}</td><td>${b.interned}</td><td>${b.placed}</td><td>${b.total>0? Math.round((b.placed/b.total)*100) : 0}%</td></tr>`).join('') || '<tr><td colspan="6" class="text-center">No branch stats data</td></tr>';
+        }
+    } catch (e) {
+        console.error('Failed to load reports:', e);
+        const pTbody = document.getElementById('placementBody');
+        if (pTbody) pTbody.innerHTML = '<tr><td colspan="9" class="text-center" style="color:var(--danger)">Failed to load data. Please try again.</td></tr>';
+    }
+};
+
+    // Filter button listeners
+    document.getElementById('btnFilterPlacement')?.addEventListener('click', loadData);
+    document.getElementById('btnFilterInternship')?.addEventListener('click', loadData);
     
-    const pTbody = document.getElementById('placementBody');
-    if (pTbody) {
-        pTbody.innerHTML = r.placement.map(p => `<tr><td>${p.student_name}</td><td>${p.roll_number||'-'}</td><td>${p.branch||'-'}</td><td>${p.year||'-'}</td><td>${p.company_name}</td><td>${p.job_title}</td><td>${p.salary||'-'}</td><td>${formatDate(p.joining_date)}</td><td><span class="badge ${getBadgeClass(p.status)}">${p.status}</span></td></tr>`).join('');
-    }
+    // Allow enter key on role inputs
+    document.getElementById('filterRole')?.addEventListener('keypress', (e) => { if (e.key === 'Enter') loadData(); });
+    document.getElementById('filterRoleIntern')?.addEventListener('keypress', (e) => { if (e.key === 'Enter') loadData(); });
 
-    const iTbody = document.getElementById('internshipBody');
-    if (iTbody) {
-        iTbody.innerHTML = r.internship.map(i => `<tr><td>${i.student_name}</td><td>${i.roll_number||'-'}</td><td>${i.branch||'-'}</td><td>${i.company_name}</td><td>${i.title}</td><td>${formatDate(i.start_date)} - ${formatDate(i.end_date)}</td><td>${i.stipend||'-'}</td><td><span class="badge ${getBadgeClass(i.status)}">${i.status}</span></td></tr>`).join('');
-    }
-
-    const cTbody = document.getElementById('companySummaryBody');
-    if (cTbody) {
-        cTbody.innerHTML = r.companySummary.map(c => `<tr><td><strong>${c.company_name}</strong></td><td>${c.total_opportunities}</td><td>${c.placements}</td><td>${c.internships}</td><td>${c.total_apps}</td><td><strong>${c.hired}</strong></td></tr>`).join('');
-    }
-
-    const bTbody = document.getElementById('branchStatsBody');
-    if (bTbody) {
-        bTbody.innerHTML = r.branchStats.map(b => `<tr><td><strong>${b.branch}</strong></td><td>${b.total}</td><td>${b.avg_cgpa||'-'}</td><td>${b.interned}</td><td>${b.placed}</td><td>${b.total>0? Math.round((b.placed/b.total)*100) : 0}%</td></tr>`).join('');
-    }
+    initialLoadData = loadData; 
+    loadData();
 
     window.exportCSV = (tableId) => {
         let csv = [];

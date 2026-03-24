@@ -285,11 +285,37 @@ switch ($action) {
 
     // ── Reports ──────────────────────────────────────────────
     case 'get_reports':
-        $placement = $pdo->query("SELECT CONCAT(s.first_name,' ',s.last_name) as student_name, s.roll_number, s.branch, s.year, c.company_name, p.job_title, p.salary, p.joining_date, p.status FROM placements p JOIN students s ON p.student_id=s.id JOIN companies c ON p.company_id=c.id ORDER BY p.created_at DESC")->fetchAll();
-        $internship = $pdo->query("SELECT CONCAT(s.first_name,' ',s.last_name) as student_name, s.roll_number, s.branch, c.company_name, i.title, i.start_date, i.end_date, i.stipend, i.status FROM internships i JOIN students s ON i.student_id=s.id JOIN companies c ON i.company_id=c.id ORDER BY i.start_date DESC")->fetchAll();
+        $p_where = "1=1"; $p_params = [];
+        if (!empty($_GET['company_id'])) { $p_where .= " AND p.company_id=?"; $p_params[] = intval($_GET['company_id']); }
+        if (!empty($_GET['role']))       { $p_where .= " AND p.job_title LIKE ?"; $p_params[] = '%'.$_GET['role'].'%'; }
+        if (!empty($_GET['status']))     { $p_where .= " AND p.status=?"; $p_params[] = $_GET['status']; }
+
+        $stmt = $pdo->prepare("SELECT CONCAT(s.first_name,' ',s.last_name) as student_name, s.roll_number, s.branch, s.year, c.company_name, p.job_title, p.salary, p.joining_date, p.status FROM placements p JOIN students s ON p.student_id=s.id JOIN companies c ON p.company_id=c.id WHERE $p_where ORDER BY p.created_at DESC");
+        $stmt->execute($p_params);
+        $placement = $stmt->fetchAll();
+
+        // Internship Filtering
+        $i_where = "1=1"; $i_params = [];
+        if (!empty($_GET['i_company_id'])) { $i_where .= " AND i.company_id=?"; $i_params[] = intval($_GET['i_company_id']); }
+        if (!empty($_GET['i_role']))       { $i_where .= " AND i.title LIKE ?"; $i_params[] = '%'.$_GET['i_role'].'%'; }
+        if (!empty($_GET['i_status']))     { $i_where .= " AND i.status=?"; $i_params[] = $_GET['i_status']; }
+
+        $stmt2 = $pdo->prepare("SELECT CONCAT(s.first_name,' ',s.last_name) as student_name, s.roll_number, s.branch, c.company_name, i.title, i.start_date, i.end_date, i.stipend, i.status FROM internships i JOIN students s ON i.student_id=s.id JOIN companies c ON i.company_id=c.id WHERE $i_where ORDER BY i.start_date DESC");
+        $stmt2->execute($i_params);
+        $internship = $stmt2->fetchAll();
         $compSummary = $pdo->query("SELECT c.company_name, COUNT(DISTINCT o.id) as total_opportunities, SUM(CASE WHEN o.type='Placement' THEN 1 ELSE 0 END) as placements, SUM(CASE WHEN o.type='Internship' THEN 1 ELSE 0 END) as internships, (SELECT COUNT(*) FROM applications a2 JOIN opportunities o2 ON a2.opportunity_id=o2.id WHERE o2.company_id=c.id) as total_apps, (SELECT COUNT(*) FROM placements p WHERE p.company_id=c.id) as hired FROM companies c LEFT JOIN opportunities o ON c.id=o.company_id WHERE c.is_approved=1 GROUP BY c.id, c.company_name ORDER BY hired DESC")->fetchAll();
         $branchStats = $pdo->query("SELECT s.branch, COUNT(*) as total, SUM(CASE WHEN s.placement_status='Placed' THEN 1 ELSE 0 END) as placed, SUM(CASE WHEN s.internship_status IN ('Active','Completed') THEN 1 ELSE 0 END) as interned, ROUND(AVG(s.cgpa),2) as avg_cgpa FROM students s WHERE s.branch IS NOT NULL GROUP BY s.branch ORDER BY s.branch")->fetchAll();
-        echo json_encode(['placement' => $placement, 'internship' => $internship, 'companySummary' => $compSummary, 'branchStats' => $branchStats]);
+        
+        // Also send company list for the filter dropdown (all enrolled/registered)
+        $companies = $pdo->query("SELECT id, company_name FROM companies ORDER BY company_name ASC")->fetchAll();
+
+        echo json_encode([
+            'placement' => $placement, 
+            'internship' => $internship, 
+            'companySummary' => $compSummary, 
+            'branchStats' => $branchStats,
+            'companies' => $companies
+        ]);
         break;
 
     // ── Users ────────────────────────────────────────────────

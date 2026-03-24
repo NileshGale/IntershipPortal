@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reports & Analytics | Admin</title>
+    <link rel="stylesheet" href="../../css/style.css">
+</head>
+<body class="layout-admin">
+    <div class="sidebar" id="sidebar"></div>
+    <div class="main-wrapper">
+        <div class="topbar" id="topbar"></div>
+        <div class="page-content">
+            <h2 class="mb-24">Data Reports</h2>
+
+            <div class="tabs">
+                <button class="tab-btn active" data-tab="tab-placements">Placement Records</button>
+                <button class="tab-btn" data-tab="tab-internships">Internship Records</button>
+                <button class="tab-btn" data-tab="tab-companies">Company Summary</button>
+                <button class="tab-btn" data-tab="tab-branches">Branch-wise Stats</button>
+            </div>
+
+            <!-- Placements Tab -->
+            <div id="tab-placements" class="tab-content active">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">All Offers (Placement)</h3>
+                        <button onclick="exportCSV('placementTable')" class="btn btn-primary btn-sm">⬇ Export CSV</button>
+                    </div>
+                    <div class="table-wrapper" style="max-height: 500px; overflow-y: auto;">
+                        <table id="placementTable">
+                            <thead>
+                                <tr><th>Student Name</th><th>Roll No</th><th>Branch</th><th>Batch</th><th>Company</th><th>Role</th><th>Package</th><th>Joining Date</th><th>Status</th></tr>
+                            </thead>
+                            <tbody id="placementBody"><tr><td colspan="9" class="text-center">Loading...</td></tr></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Internships Tab -->
+            <div id="tab-internships" class="tab-content">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Active & Completed Internships</h3>
+                        <button onclick="exportCSV('internTable')" class="btn btn-primary btn-sm">⬇ Export CSV</button>
+                    </div>
+                    <div class="table-wrapper" style="max-height: 500px; overflow-y: auto;">
+                        <table id="internTable">
+                            <thead>
+                                <tr><th>Student Name</th><th>Roll No</th><th>Branch</th><th>Company</th><th>Role</th><th>Duration</th><th>Stipend</th><th>Status</th></tr>
+                            </thead>
+                            <tbody id="internshipBody"><tr><td colspan="8" class="text-center">Loading...</td></tr></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Company Summary Tab -->
+            <div id="tab-companies" class="tab-content">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Recruiter Activity Summary</h3>
+                        <button onclick="exportCSV('compTable')" class="btn btn-primary btn-sm">⬇ Export CSV</button>
+                    </div>
+                    <div class="table-wrapper">
+                        <table id="compTable">
+                            <thead>
+                                <tr><th>Company Name</th><th>Total Listings</th><th>Placements</th><th>Internships</th><th>Total Apps Rcvd</th><th>Students Hired</th></tr>
+                            </thead>
+                            <tbody id="companySummaryBody"><tr><td colspan="6" class="text-center">Loading...</td></tr></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Branch-wise Stats Tab -->
+            <div id="tab-branches" class="tab-content">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Performance by Branch</h3>
+                        <button onclick="exportCSV('branchTable')" class="btn btn-primary btn-sm">⬇ Export CSV</button>
+                    </div>
+                    <div class="table-wrapper">
+                        <table id="branchTable">
+                            <thead>
+                                <tr><th>Branch</th><th>Total Students</th><th>Avg CGPA</th><th>Internships Secured</th><th>Placements Secured</th><th>Placement %</th></tr>
+                            </thead>
+                            <tbody id="branchStatsBody"><tr><td colspan="6" class="text-center">Loading...</td></tr></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <script src="../../js/main.js"></script>
+    <script src="../../js/admin.js"></script>
+</body>
+</html>

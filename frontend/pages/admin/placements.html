@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Placements | Admin</title>
+    <link rel="stylesheet" href="../../css/style.css">
+</head>
+<body class="layout-admin">
+    <div class="sidebar" id="sidebar"></div>
+    <div class="main-wrapper">
+        <div class="topbar" id="topbar"></div>
+        <div class="page-content">
+            
+            <div class="stats-grid" style="grid-template-columns: 1fr 1fr;">
+                <div class="stat-card">
+                    <div class="stat-icon green">🏆</div>
+                    <div><div class="stat-value" id="stat-placed">0</div><div class="stat-label">Total Placed Students</div></div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon blue">💰</div>
+                    <div><div class="stat-value" id="stat-pkg">-</div><div class="stat-label">Average Package</div></div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">Placement Records</h2>
+                </div>
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Student</th>
+                                <th>Company / Role</th>
+                                <th>Package (LPA)</th>
+                                <th>Joining Date</th>
+                                <th>Status</th>
+                                <th>Offer Letter</th>
+                            </tr>
+                        </thead>
+                        <tbody id="placementsBody">
+                            <tr><td colspan="6" class="text-center">Loading...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="../../js/main.js"></script>
+    <script src="../../js/admin.js"></script>
+</body>
+</html>

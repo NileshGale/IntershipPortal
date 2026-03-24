@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Company Profile | CareerFlow</title>
+    <link rel="stylesheet" href="../../css/style.css">
+</head>
+<body class="layout-company">
+    <div class="sidebar" id="sidebar"></div>
+    <div class="main-wrapper">
+        <div class="topbar" id="topbar"></div>
+        <div class="page-content">
+            <div class="grid-2">
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">Organization Details</h2>
+                        <div id="statusBadge"></div>
+                    </div>
+
+                    <form id="profileForm">
+                        <div class="form-group">
+                            <label class="form-label">Company Name</label>
+                            <input type="text" name="company_name" class="form-control" required>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label">Industry Sector</label>
+                                <input type="text" name="industry" class="form-control" placeholder="e.g. IT, FinTech, Manufacturing">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Website URL</label>
+                                <input type="url" name="website" class="form-control" placeholder="https://example.com">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">About Company (Visible to students)</label>
+                            <textarea name="description" class="form-control" rows="4"></textarea>
+                        </div>
+
+                        <h3 class="mt-24 mb-16" style="padding-bottom:8px; border-bottom:1px solid var(--border); font-size:1.1rem">Primary HR Contact</h3>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label">HR / Contact Person Name</label>
+                                <input type="text" name="hr_name" class="form-control" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Contact Phone</label>
+                                <input type="text" name="hr_phone" class="form-control">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Office Address</label>
+                            <textarea name="address" class="form-control" rows="2"></textarea>
+                        </div>
+
+                        <div class="mt-24">
+                            <button type="submit" class="btn btn-primary">Save Company Profile</button>
+                        </div>
+                    </form>
+                </div>
+
+                <div>
+                    <div class="card">
+                        <div class="card-header"><h3 class="card-title">Partner Guidelines</h3></div>
+                        <ul style="padding-left:18px; color:var(--text-muted); font-size:.85rem; line-height:1.6">
+                            <li class="mb-1">Your company profile must be approved by the college Placement Admin before you can post job opportunities.</li>
+                            <li class="mb-1">Ensure the company description accurately reflects your work culture to attract aligned candidates.</li>
+                            <li class="mb-1">Keep the HR contact details up-to-date as the college placement cell will use this to coordinate drives.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="../../js/main.js"></script>
+    <script src="../../js/company.js"></script>
+</body>
+</html>

@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Opportunities | Admin</title>
+    <link rel="stylesheet" href="../../css/style.css">
+</head>
+<body class="layout-admin">
+    <div class="sidebar" id="sidebar"></div>
+    <div class="main-wrapper">
+        <div class="topbar" id="topbar"></div>
+        <div class="page-content">
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">Placement & Internship Opportunities</h2>
+                </div>
+
+                <form id="searchForm" class="search-bar">
+                    <input type="text" name="search" class="form-control" placeholder="Search Title or Company...">
+                    <select name="type" class="form-select">
+                        <option value="">All Types</option>
+                        <option value="Placement">Placement</option>
+                        <option value="Internship">Internship</option>
+                    </select>
+                    <select name="status" class="form-select">
+                        <option value="">All Status</option>
+                        <option value="Open">Open</option>
+                        <option value="Closed">Closed</option>
+                    </select>
+                    <select name="approved" class="form-select">
+                        <option value="">All Approvals</option>
+                        <option value="1">Approved</option>
+                        <option value="0">Pending</option>
+                    </select>
+                    <button type="submit" class="btn btn-primary">Filter</button>
+                </form>
+
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Role</th>
+                                <th>Company</th>
+                                <th>Location</th>
+                                <th>Package/Stipend</th>
+                                <th>Status</th>
+                                <th>Apps</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="oppsBody">
+                            <tr><td colspan="7" class="text-center">Loading...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="../../js/main.js"></script>
+    <script src="../../js/admin.js"></script>
+</body>
+</html>

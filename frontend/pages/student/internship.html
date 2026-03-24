@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Internship | Student</title>
+    <link rel="stylesheet" href="../../css/style.css">
+</head>
+<body class="layout-student">
+    <div class="sidebar" id="sidebar"></div>
+    <div class="main-wrapper">
+        <div class="topbar" id="topbar"></div>
+        <div class="page-content">
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">Internship Details</h2>
+                </div>
+                
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Internship Info</th>
+                                <th>Duration</th>
+                                <th>Stipend</th>
+                                <th>Status</th>
+                                <th>Certificate</th>
+                            </tr>
+                        </thead>
+                        <tbody id="internsBody">
+                            <tr><td colspan="5" class="text-center">Loading...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Certificate Upload Form (Hidden by default) -->
+                <div id="certForm" style="display:none; margin-top: 24px; padding-top: 24px; border-top: 1px solid var(--border);">
+                    <h3 class="mb-16">Upload Completion Certificate</h3>
+                    <form id="certUploadForm" enctype="multipart/form-data">
+                        <input type="hidden" name="internship_id" id="cert_int_id">
+                        <div class="form-group">
+                            <label class="form-label">Select PDF/Image File</label>
+                            <input type="file" name="certificate" class="form-control" accept=".pdf,.jpg,.jpeg,.png" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Submit Upload</button>
+                        <button type="button" class="btn btn-outline" onclick="document.getElementById('certForm').style.display='none'">Cancel</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="../../js/main.js"></script>
+    <script src="../../js/student.js"></script>
+</body>
+</html>

@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard | CareerFlow</title>
+    <link rel="stylesheet" href="../../css/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body class="layout-admin">
+    
+    <div class="sidebar" id="sidebar"></div>
+    
+    <div class="main-wrapper">
+        <div class="topbar" id="topbar"></div>
+        
+        <div class="page-content">
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon blue">🎓</div>
+                    <div><div class="stat-value" id="stat-students">0</div><div class="stat-label">Total Students</div></div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon purple">🏢</div>
+                    <div><div class="stat-value" id="stat-companies">0</div><div class="stat-label">Companies</div></div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon orange">💼</div>
+                    <div><div class="stat-value" id="stat-opps">0</div><div class="stat-label">Active Opportunities</div></div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon green">🏆</div>
+                    <div><div class="stat-value" id="stat-placed">0</div><div class="stat-label">Students Placed</div></div>
+                </div>
+            </div>
+
+            <div class="grid-2 mb-24">
+                <div class="card">
+                    <div class="card-header"><h3 class="card-title">Placement by Branch</h3></div>
+                    <canvas id="branchChart" height="200"></canvas>
+                </div>
+                <div class="card">
+                    <div class="card-header"><h3 class="card-title">Application Trend (Last 6 Months)</h3></div>
+                    <canvas id="appTrendChart" height="200"></canvas>
+                </div>
+            </div>
+
+            <div class="grid-2">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Recently Registered Students</h3>
+                        <a href="students.html" class="btn btn-outline btn-sm">View All</a>
+                    </div>
+                    <div class="table-wrapper">
+                        <table>
+                            <thead><tr><th>Name</th><th>Roll No</th><th>Branch</th><th>Status</th></tr></thead>
+                            <tbody id="recentStudentsBody"></tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Upcoming Interviews</h3>
+                        <a href="interviews.html" class="btn btn-outline btn-sm">View Calendar</a>
+                    </div>
+                    <div class="table-wrapper">
+                        <table>
+                            <thead><tr><th>Date & Time</th><th>Company/Role</th><th>Student</th><th>Mode</th></tr></thead>
+                            <tbody id="upcomingIntBody"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Core Scripts -->
+    <script src="../../js/main.js"></script>
+    <script src="../../js/admin.js"></script>
+</body>
+</html>

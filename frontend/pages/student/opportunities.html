@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Opportunities | Student</title>
+    <link rel="stylesheet" href="../../css/style.css">
+</head>
+<body class="layout-student">
+    <div class="sidebar" id="sidebar"></div>
+    <div class="main-wrapper">
+        <div class="topbar" id="topbar"></div>
+        <div class="page-content">
+            
+            <div class="card mb-24">
+                <form id="searchForm" class="search-bar" style="margin-bottom:0; box-shadow:none; padding:0; background:transparent">
+                    <input type="text" name="search" class="form-control" placeholder="Search role or company...">
+                    <select name="type" class="form-select">
+                        <option value="">All Types (Placement & Internship)</option>
+                        <option value="Placement">Placement Only</option>
+                        <option value="Internship">Internship Only</option>
+                    </select>
+                    <button type="submit" class="btn btn-primary">Find Matches</button>
+                    <button type="reset" class="btn btn-outline" onclick="setTimeout(()=>document.getElementById('searchForm').dispatchEvent(new Event('submit')),10)">Reset</button>
+                </form>
+            </div>
+
+            <h2 class="mb-16">Available Opportunities</h2>
+            <div id="oppsBox">
+                <!-- Data populated dynamically via JS -->
+                <div class="text-center" style="padding:40px; color:var(--text-muted)">Loading opportunities...</div>
+            </div>
+
+        </div>
+    </div>
+    <script src="../../js/main.js"></script>
+    <script src="../../js/student.js"></script>
+</body>
+</html>

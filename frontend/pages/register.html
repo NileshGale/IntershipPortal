@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register | CareerFlow Tracker</title>
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body class="auth-page">
+
+    <div class="auth-card" style="max-width: 500px;">
+        <div class="auth-logo">
+            <div class="logo-icon">🎓</div>
+            <h1>Join CareerFlow</h1>
+            <p>Create your new account</p>
+        </div>
+
+        <div id="step1_reg">
+            <form id="registerForm">
+                <div class="form-group">
+                    <label class="form-label">I am a</label>
+                    <select name="role" class="form-select" required>
+                        <option value="student">Student</option>
+                        <option value="company">Company / Recruiter</option>
+                    </select>
+                </div>
+
+                <!-- Student specific fields -->
+                <div id="studentFields" style="display:none;">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">First Name</label>
+                            <input type="text" name="first_name" class="form-control" placeholder="John">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Last Name</label>
+                            <input type="text" name="last_name" class="form-control" placeholder="Doe">
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Roll Number</label>
+                        <input type="text" name="roll_number" class="form-control" placeholder="e.g. 21CS01">
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Branch</label>
+                            <select name="branch" class="form-select">
+                                <option value="">Select Branch</option>
+                                <option value="CSE">Computer Science</option>
+                                <option value="IT">Information Technology</option>
+                                <option value="ECE">Electronics</option>
+                                <option value="MECH">Mechanical</option>
+                                <option value="CIVIL">Civil</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Year of Passing</label>
+                            <input type="number" name="year" class="form-control" placeholder="e.g. 2025" min="2020" max="2030">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Company specific fields -->
+                <div id="companyFields" style="display:none;">
+                    <div class="form-group">
+                        <label class="form-label">Company Name</label>
+                        <input type="text" name="company_name" class="form-control" placeholder="Acme Corp">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">HR / Contact Person Name</label>
+                        <input type="text" name="hr_name" class="form-control" placeholder="Jane Smith">
+                    </div>
+                </div>
+
+                <!-- Common fields -->
+                <div class="form-group">
+                    <label class="form-label">Email Address <span class="form-hint">(will be used for login)</span></label>
+                    <input type="email" name="email" class="form-control" required placeholder="name@example.com">
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Password</label>
+                        <input type="password" name="password" id="password" class="form-control" required placeholder="Min 8 chars">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Confirm Password</label>
+                        <input type="password" name="confirm_password" id="confirm_password" class="form-control" required placeholder="Confirm">
+                        <div class="form-error"></div>
+                    </div>
+                </div>
+
+                <button type="submit" id="regSubmitBtn" class="btn btn-primary" style="width: 100%; justify-content: center; margin-top: 10px;">
+                    Send OTP
+                </button>
+            </form>
+
+            <div class="auth-footer">
+                Already have an account? <a href="login.html" style="font-weight: 600;">Sign in</a>
+            </div>
+        </div>
+
+        <div id="step2_reg" style="display:none;">
+            <p style="margin-bottom: 20px; color: var(--text-muted); text-align: center;">We've sent an OTP to your email address to verify your account.</p>
+            <div class="form-group">
+                <label class="form-label">Enter 6-digit OTP</label>
+                <input type="text" id="reg_otp_input" class="form-control" placeholder="123456" maxlength="6" style="text-align: center; letter-spacing: 5px; font-size: 1.5rem;">
+            </div>
+            <button type="button" id="verifyRegOtpBtn" class="btn btn-primary" style="width: 100%; justify-content: center; margin-top: 10px;">
+                Verify & Create Account
+            </button>
+            <div class="auth-footer">
+                <a href="#" onclick="document.getElementById('step2_reg').style.display='none'; document.getElementById('step1_reg').style.display='block'; return false;">← Back to details</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Note: main.js loaded first to provide apiCall -->
+    <script src="../js/main.js"></script>
+    <script src="../js/auth.js"></script>
+</body>
+</html>

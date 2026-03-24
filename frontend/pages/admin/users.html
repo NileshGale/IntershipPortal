@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage System Users | Admin</title>
+    <link rel="stylesheet" href="../../css/style.css">
+</head>
+<body class="layout-admin">
+    <div class="sidebar" id="sidebar"></div>
+    <div class="main-wrapper">
+        <div class="topbar" id="topbar"></div>
+        <div class="page-content">
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">All System Accounts</h2>
+                </div>
+                
+                <div class="alert alert-info">
+                    <strong>Note:</strong> Deactivating a user prevents them from logging in, but preserves their data. Use the Students or Companies page to permanently delete profiles.
+                </div>
+
+                <div class="table-wrapper mt-4">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Email Address</th>
+                                <th>Role</th>
+                                <th>Profile Name / Display</th>
+                                <th>Registered On</th>
+                                <th>Account Status</th>
+                                <th>Toggle Access</th>
+                            </tr>
+                        </thead>
+                        <tbody id="usersBody">
+                            <tr><td colspan="6" class="text-center">Loading...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="../../js/main.js"></script>
+    <script src="../../js/admin.js"></script>
+</body>
+</html>

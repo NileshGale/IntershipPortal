@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Students | Admin</title>
+    <link rel="stylesheet" href="../../css/style.css">
+</head>
+<body class="layout-admin">
+    <div class="sidebar" id="sidebar"></div>
+    <div class="main-wrapper">
+        <div class="topbar" id="topbar"></div>
+        
+        <div class="page-content">
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">Student Directory</h2>
+                    <a href="reports.html" class="btn btn-outline btn-sm">Export Data ↗</a>
+                </div>
+
+                <form id="searchForm" class="search-bar">
+                    <input type="text" name="search" class="form-control" placeholder="Search name, roll no, email...">
+                    <select name="branch" class="form-select">
+                        <option value="">All Branches</option>
+                        <option value="CSE">CSE</option>
+                        <option value="IT">IT</option>
+                        <option value="ECE">ECE</option>
+                        <option value="MECH">MECH</option>
+                        <option value="CIVIL">CIVIL</option>
+                    </select>
+                    <select name="status" class="form-select">
+                        <option value="">All Status</option>
+                        <option value="Unplaced">Unplaced</option>
+                        <option value="Placed">Placed</option>
+                    </select>
+                    <button type="submit" class="btn btn-primary">Filter</button>
+                    <button type="reset" class="btn btn-outline" onclick="setTimeout(()=>document.getElementById('searchForm').dispatchEvent(new Event('submit')),10)">Reset</button>
+                </form>
+
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Student</th>
+                                <th>Roll No</th>
+                                <th>Branch</th>
+                                <th>CGPA</th>
+                                <th>Status</th>
+                                <th>Verification</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="studentsBody">
+                            <tr><td colspan="7" class="text-center">Loading...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="../../js/main.js"></script>
+    <script src="../../js/admin.js"></script>
+</body>
+</html>

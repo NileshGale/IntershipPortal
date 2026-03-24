@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notifications | Student</title>
+    <link rel="stylesheet" href="../../css/style.css">
+</head>
+<body class="layout-student">
+    <div class="sidebar" id="sidebar"></div>
+    <div class="main-wrapper">
+        <div class="topbar" id="topbar"></div>
+        <div class="page-content">
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">Activity Log & Notifications</h2>
+                    <button class="btn btn-sm btn-outline" onclick="markAllRead()">Mark All Read</button>
+                </div>
+                
+                <div id="notifsBox" style="margin: 0 -24px -24px -24px;">
+                    <div class="text-center" style="padding:40px; color:var(--text-muted)">Loading notifications...</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="../../js/main.js"></script>
+    <script src="../../js/student.js"></script>
+</body>
+</html>

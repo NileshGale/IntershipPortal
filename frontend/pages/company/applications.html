@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Candidate Applications | Company</title>
+    <link rel="stylesheet" href="../../css/style.css">
+</head>
+<body class="layout-company">
+    <div class="sidebar" id="sidebar"></div>
+    <div class="main-wrapper">
+        <div class="topbar" id="topbar"></div>
+        <div class="page-content">
+            
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">Candidate Applications</h2>
+                </div>
+
+                <form id="filterForm" class="search-bar">
+                    <select name="opportunity_id" id="oppFilter" class="form-select">
+                        <option value="">All Postings</option>
+                    </select>
+                    <select name="status" class="form-select">
+                        <option value="">All Statuses</option>
+                        <option value="Applied">New (Applied)</option>
+                        <option value="Reviewed">Reviewed</option>
+                        <option value="Shortlisted">Shortlisted</option>
+                        <option value="Interviewed">Interviewed</option>
+                        <option value="Rejected">Rejected</option>
+                    </select>
+                    <button type="submit" class="btn btn-primary">Filter</button>
+                </form>
+
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Candidate</th>
+                                <th>Branch</th>
+                                <th>CGPA</th>
+                                <th>Applied For Role</th>
+                                <th>Status</th>
+                                <th>Resume</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="appsBody">
+                            <tr><td colspan="7" class="text-center">Loading...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Schedule Interview Modal -->
+            <div id="scheduleModal" class="modal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:1000; align-items:center; justify-content:center;">
+                <div class="modal-content card" style="width:100%; max-width:500px;">
+                    <div class="card-header">
+                        <h2 class="card-title">Schedule Interview</h2>
+                        <button class="btn btn-sm" style="background:transparent; border:none; font-size:1.5rem;" onclick="document.getElementById('scheduleModal').style.display='none'">×</button>
+                    </div>
+                    
+                    <p style="margin-bottom:16px;">Candidate: <strong id="int_student_name"></strong></p>
+
+                    <form id="scheduleIntForm">
+                        <input type="hidden" name="application_id" id="int_app_id">
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label">Interview Date</label>
+                                <input type="date" name="interview_date" class="form-control" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">TimeSlot</label>
+                                <input type="time" name="interview_time" class="form-control" required>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label">Round Number</label>
+                                <input type="number" name="round_number" class="form-control" value="1" min="1" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Round Name</label>
+                                <input type="text" name="round_name" class="form-control" placeholder="e.g. Technical, HR">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Interview Mode</label>
+                            <select name="mode" class="form-select" required>
+                                <option value="Online">Online / Virtual</option>
+                                <option value="In-person">In-person</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group" id="link_div">
+                            <label class="form-label">Meeting Link (GMeet / Zoom / Teams)</label>
+                            <input type="url" name="meeting_link" class="form-control" placeholder="https://meet.google.com/xxx-xxxx-xxx">
+                        </div>
+
+                        <div class="form-group" id="venue_div" style="display:none;">
+                            <label class="form-label">Physical Venue</label>
+                            <input type="text" name="venue" class="form-control" placeholder="e.g. College Seminar Hall A">
+                        </div>
+
+                        <div class="mt-4" style="text-align:right">
+                            <button type="button" class="btn btn-outline" onclick="document.getElementById('scheduleModal').style.display='none'">Cancel</button>
+                            <button type="submit" class="btn btn-primary" style="margin-left:8px;">Send Invite</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <script src="../../js/main.js"></script>
+    <script src="../../js/company.js"></script>
+</body>
+</html>

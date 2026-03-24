@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Profile | Student</title>
+    <link rel="stylesheet" href="../../css/style.css">
+</head>
+<body class="layout-student">
+    <div class="sidebar" id="sidebar"></div>
+    <div class="main-wrapper">
+        <div class="topbar" id="topbar"></div>
+        <div class="page-content">
+            <div class="grid-2">
+                <!-- Profile Form -->
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">Personal & Academic Details</h2>
+                        <div id="verificationStatus"></div>
+                    </div>
+
+                    <form id="profileForm">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label">First Name</label>
+                                <input type="text" name="first_name" class="form-control" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Last Name</label>
+                                <input type="text" name="last_name" class="form-control" required>
+                            </div>
+                        </div>
+
+                        <div class="form-row-3">
+                            <div class="form-group">
+                                <label class="form-label">Phone</label>
+                                <input type="text" name="phone" class="form-control">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Date of Birth</label>
+                                <input type="date" name="dob" class="form-control">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Gender</label>
+                                <select name="gender" class="form-select">
+                                    <option value="">Select...</option>
+                                    <option value="Male">Male</option>
+                                    <option value="Female">Female</option>
+                                    <option value="Other">Other</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Address</label>
+                            <textarea name="address" class="form-control" rows="2"></textarea>
+                        </div>
+
+                        <h3 style="font-size:1rem; margin:20px 0 16px; padding-bottom:8px; border-bottom:1px solid var(--border)">Academic Information</h3>
+
+                        <div class="form-row-3">
+                            <div class="form-group">
+                                <label class="form-label">Branch</label>
+                                <select name="branch" class="form-select" required>
+                                    <option value="CSE">Computer Science</option>
+                                    <option value="IT">Information Tech</option>
+                                    <option value="ECE">Electronics</option>
+                                    <option value="MECH">Mechanical</option>
+                                    <option value="CIVIL">Civil</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Year of Passing</label>
+                                <input type="number" name="year" class="form-control" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Current CGPA (out of 10)</label>
+                                <input type="number" step="0.01" min="0" max="10" name="cgpa" class="form-control" onchange="validateCGPA(this)" required>
+                            </div>
+                        </div>
+
+                        <h3 style="font-size:1rem; margin:20px 0 16px; padding-bottom:8px; border-bottom:1px solid var(--border)">Skills & Experience</h3>
+
+                        <div class="form-group">
+                            <label class="form-label">Core Skills (comma separated)</label>
+                            <textarea name="skills" class="form-control" rows="2" placeholder="Java, Python, React, SQL..."></textarea>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">Projects</label>
+                            <textarea name="projects" class="form-control" rows="3" placeholder="Describe your key projects..."></textarea>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">Certifications / Achievements</label>
+                            <textarea name="certifications" class="form-control" rows="2"></textarea>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label">LinkedIn Profile URL</label>
+                                <input type="url" name="linkedin" class="form-control" placeholder="https://linkedin.com/in/username">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">GitHub Profile URL</label>
+                                <input type="url" name="github" class="form-control" placeholder="https://github.com/username">
+                            </div>
+                        </div>
+
+                        <div class="mt-4">
+                            <button type="submit" class="btn btn-primary">Save Profile Changes</button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Side Info -->
+                <div>
+                    <div class="card mb-24">
+                        <div class="card-header"><h3 class="card-title">Career Flow Status</h3></div>
+                        <div id="placementStatusBox" style="line-height: 2"></div>
+                    </div>
+                    
+                    <div class="card">
+                        <div class="card-header"><h3 class="card-title">Profile Guidelines</h3></div>
+                        <ul style="padding-left:18px; color:var(--text-muted); font-size:.85rem; line-height:1.6">
+                            <li class="mb-1">Ensure your CGPA is accurate. TPO will verify it.</li>
+                            <li class="mb-1">Add relevant skills separated by commas to improve search visibility by companies.</li>
+                            <li class="mb-1">Keep your linkedIn and GitHub links working.</li>
+                            <li>Go to the <a href="documents.html">Documents</a> section to upload your resume.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="../../js/main.js"></script>
+    <script src="../../js/student.js"></script>
+</body>
+</html>

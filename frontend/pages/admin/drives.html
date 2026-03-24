@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Placement Drives | Admin</title>
+    <link rel="stylesheet" href="../../css/style.css">
+</head>
+<body class="layout-admin">
+    <div class="sidebar" id="sidebar"></div>
+    <div class="main-wrapper">
+        <div class="topbar" id="topbar"></div>
+        <div class="page-content">
+            <div class="grid-2">
+                <div class="card">
+                    <div class="card-header"><h2 class="card-title">Schedule Placement Drive</h2></div>
+                    <form id="addDriveForm">
+                        <div class="form-group">
+                            <label class="form-label">Drive Title</label>
+                            <input type="text" name="title" class="form-control" required placeholder="e.g. Mega Pool Drive 2025">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Sponsoring Company (Optional)</label>
+                            <select name="company_id" class="form-select">
+                                <option value="">-- None (Open for multiple) --</option>
+                            </select>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label">Drive Date</label>
+                                <input type="date" name="drive_date" class="form-control" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Venue</label>
+                                <input type="text" name="venue" class="form-control" placeholder="Main Auditorium">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Eligibility Criteria</label>
+                            <textarea name="eligibility" class="form-control" placeholder="e.g. CSE/IT with >7 CGPA"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Selection Rounds</label>
+                            <textarea name="rounds" class="form-control" placeholder="1. Aptitude&#10;2. Tech Interview&#10;3. HR"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Description / Instructions</label>
+                            <textarea name="description" class="form-control"></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Schedule Drive</button>
+                    </form>
+                </div>
+
+                <div class="card">
+                    <div class="card-header"><h3 class="card-title">Placement Drives List</h3></div>
+                    <div class="table-wrapper">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Drive Details</th>
+                                    <th>Date</th>
+                                    <th>Venue</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody id="drivesBody">
+                                <tr><td colspan="4" class="text-center">Loading...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="../../js/main.js"></script>
+    <script src="../../js/admin.js"></script>
+</body>
+</html>

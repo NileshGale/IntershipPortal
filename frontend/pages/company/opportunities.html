@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Postings | Company</title>
+    <link rel="stylesheet" href="../../css/style.css">
+</head>
+<body class="layout-company">
+    <div class="sidebar" id="sidebar"></div>
+    <div class="main-wrapper">
+        <div class="topbar" id="topbar"></div>
+        <div class="page-content">
+            
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">Job & Internship Postings</h2>
+                    <button id="postOppFormBtn" class="btn btn-primary btn-sm" onclick="document.getElementById('oppModal').style.display='flex'">+ Post Opportunity</button>
+                </div>
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Role</th>
+                                <th>Location</th>
+                                <th>Positions</th>
+                                <th>Status</th>
+                                <th>Approval</th>
+                                <th>Applications</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="oppsBody">
+                            <tr><td colspan="7" class="text-center">Loading...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Modal for Posting Opportunity -->
+            <div id="oppModal" class="modal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:1000; align-items:center; justify-content:center;">
+                <div class="modal-content card" style="width:100%; max-width:600px; max-height:90vh; overflow-y:auto;">
+                    <div class="card-header">
+                        <h2 class="card-title">Post New Opportunity</h2>
+                        <button class="btn btn-sm" style="background:transparent; border:none; font-size:1.5rem;" onclick="document.getElementById('oppModal').style.display='none'">×</button>
+                    </div>
+                    
+                    <form id="postOpportunityForm">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label">Title / Role</label>
+                                <input type="text" name="title" class="form-control" placeholder="e.g. Software Engineer" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Type</label>
+                                <select name="type" class="form-select" required>
+                                    <option value="Placement">Full-Time Placement</option>
+                                    <option value="Internship">Internship</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Description & Requirements</label>
+                            <textarea name="description" class="form-control" rows="5" required></textarea>
+                        </div>
+
+                        <div class="form-row" id="salary_div">
+                            <div class="form-group">
+                                <label class="form-label">Salary / Compensation (LPA)</label>
+                                <input type="text" name="salary" class="form-control" placeholder="e.g. 8 - 12 LPA">
+                            </div>
+                        </div>
+
+                        <div class="form-row" id="stipend_div" style="display:none;">
+                            <div class="form-group">
+                                <label class="form-label">Monthly Stipend (₹)</label>
+                                <input type="text" name="stipend" class="form-control" placeholder="e.g. 20,000 / month">
+                            </div>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group" id="duration_div" style="display:none;">
+                                <label class="form-label">Duration (Months)</label>
+                                <input type="text" name="duration" class="form-control" placeholder="e.g. 6 months">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Location</label>
+                                <input type="text" name="location" class="form-control" placeholder="e.g. Bangalore / Remote" required>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label">Number of Positions</label>
+                                <input type="number" name="positions" class="form-control" min="1" value="1">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Application Deadline</label>
+                                <input type="date" name="deadline" class="form-control">
+                            </div>
+                        </div>
+
+                        <div class="mt-4" style="text-align:right">
+                            <button type="button" class="btn btn-outline" onclick="document.getElementById('oppModal').style.display='none'">Cancel</button>
+                            <button type="submit" class="btn btn-primary" style="margin-left:8px;">Post Opportunity</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <script src="../../js/main.js"></script>
+    <script src="../../js/company.js"></script>
+</body>
+</html>

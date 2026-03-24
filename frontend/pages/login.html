@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login | CareerFlow Tracker</title>
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body class="auth-page">
+
+    <div class="auth-card">
+        <div class="auth-logo">
+            <div class="logo-icon">🎓</div>
+            <h1>CareerFlow</h1>
+            <p>Placement & Internship Tracking System</p>
+        </div>
+
+        <h2>Sign in to your account</h2>
+
+        <form id="loginForm">
+            <div class="form-group">
+                <label class="form-label">Email address</label>
+                <input type="email" name="email" class="form-control" required placeholder="Enter your email">
+            </div>
+
+            <div class="form-group">
+                <div style="display: flex; justify-content: space-between;">
+                    <label class="form-label">Password</label>
+                    <a href="forgot_password.html" style="font-size: .85rem; font-weight: 500;">Forgot password?</a>
+                </div>
+                <input type="password" name="password" class="form-control" required placeholder="Enter password">
+            </div>
+
+            <button type="submit" class="btn btn-primary" style="width: 100%; justify-content: center; margin-top: 10px;">
+                Sign In
+            </button>
+        </form>
+
+        <div class="divider"><span>OR</span></div>
+
+        <div class="auth-footer">
+            Don't have an account? <a href="register.html" style="font-weight: 600;">Register here</a>
+        </div>
+
+        <div style="margin-top:24px; padding:16px; background:var(--bg); border:1px solid var(--border); border-radius:8px; font-size:.8rem;">
+            <strong style="display:block;margin-bottom:8px;color:var(--text);"><span style="color:#f59e0b">★</span> Demo Accounts</strong>
+            <div style="display:grid;grid-template-columns:auto 1fr;gap:4px 12px;color:var(--text-muted);">
+                <span>Admin:</span> <code>admin@college.edu</code>
+                <span>Student:</span> <code>rahul@student.edu</code>
+                <span>Company:</span> <code>hr@techcorp.com</code>
+                <span style="grid-column:1/-1;margin-top:6px;padding-top:6px;border-top:1px dashed var(--border);">Pwd for all: <strong>Role@123</strong> (e.g. Admin@123)</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Note: main.js loaded first to provide apiCall -->
+    <script src="../js/main.js"></script>
+    <script src="../js/auth.js"></script>
+</body>
+</html>

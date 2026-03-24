@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Dashboard | CareerFlow</title>
+    <link rel="stylesheet" href="../../css/style.css">
+</head>
+<body class="layout-student">
+    <div class="sidebar" id="sidebar"></div>
+    <div class="main-wrapper">
+        <div class="topbar" id="topbar"></div>
+        <div class="page-content">
+            
+            <div id="profileCompletionAlert"></div>
+            <div id="currentStatusCard"></div>
+
+            <h2 class="mb-24 mt-4">Overview</h2>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon blue">📋</div>
+                    <div><div class="stat-value" id="stat-apps">0</div><div class="stat-label">Total Applications</div></div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon orange">⭐</div>
+                    <div><div class="stat-value" id="stat-short">0</div><div class="stat-label">Shortlisted</div></div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon green">🎉</div>
+                    <div><div class="stat-value" id="stat-sel">0</div><div class="stat-label">Selected</div></div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon purple">🎓</div>
+                    <div><div class="stat-value" id="stat-cgpa">-</div><div class="stat-label">Current CGPA</div></div>
+                </div>
+            </div>
+
+            <div class="grid-2">
+                <!-- Upcoming Interviews -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">My Upcoming Interviews</h3>
+                        <a href="interviews.html" class="btn btn-outline btn-sm">View All ↗</a>
+                    </div>
+                    <div class="table-wrapper">
+                        <table>
+                            <thead><tr><th>Time</th><th>Company & Role</th><th>Round</th><th>Mode</th><th>Action</th></tr></thead>
+                            <tbody id="upcomingIntBody"></tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Recent Applications -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Recent Applications</h3>
+                        <a href="applications.html" class="btn btn-outline btn-sm">View All ↗</a>
+                    </div>
+                    <div class="table-wrapper">
+                        <table>
+                            <thead><tr><th>Role</th><th>Type</th><th>Applied On</th><th>Status</th></tr></thead>
+                            <tbody id="recentAppsBody"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Announcements -->
+            <div class="card" style="margin-top: 24px;">
+                <div class="card-header">
+                    <h3 class="card-title">Department Announcements</h3>
+                </div>
+                <!-- Injected via JS -->
+                <div id="announcementsBox" style="margin:-24px -24px 0 -24px;"></div>
+            </div>
+
+        </div>
+    </div>
+    <script src="../../js/main.js"></script>
+    <script src="../../js/student.js"></script>
+</body>
+</html>

@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Offers | Company</title>
+    <link rel="stylesheet" href="../../css/style.css">
+</head>
+<body class="layout-company">
+    <div class="sidebar" id="sidebar"></div>
+    <div class="main-wrapper">
+        <div class="topbar" id="topbar"></div>
+        <div class="page-content">
+            <div class="grid-2">
+                <!-- Extend Offer Form -->
+                <div class="card">
+                    <div class="card-header"><h2 class="card-title">Eligible Candidates</h2></div>
+                    <p style="font-size:.85rem; color:var(--text-muted); margin-bottom:16px;">
+                        Candidates who have been moved to 'Shortlisted' or 'Interviewed' status are available below to extend offers.
+                    </p>
+                    <div class="table-wrapper">
+                        <table>
+                            <thead><tr><th>Candidate</th><th>Branch</th><th>Role</th><th>Status</th><th>Action</th></tr></thead>
+                            <tbody id="candidatesBody"><tr><td colspan="5" class="text-center">Loading...</td></tr></tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Extended Offers List -->
+                <div class="card">
+                    <div class="card-header"><h2 class="card-title">Extended Offers</h2></div>
+                    <div class="table-wrapper">
+                        <table>
+                            <thead><tr><th>Candidate</th><th>Role</th><th>Type</th><th>Package/Stipend</th><th>Start Date</th><th>Status</th></tr></thead>
+                            <tbody id="offersBody"><tr><td colspan="6" class="text-center">Loading...</td></tr></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Extend Offer Modal -->
+            <div id="offerModal" class="modal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:1000; align-items:center; justify-content:center;">
+                <div class="modal-content card" style="width:100%; max-width:500px;">
+                    <div class="card-header">
+                        <h2 class="card-title">Extend Offer</h2>
+                        <button class="btn btn-sm" style="background:transparent; border:none; font-size:1.5rem;" onclick="document.getElementById('offerModal').style.display='none'">×</button>
+                    </div>
+                    
+                    <p style="margin-bottom:16px;">
+                        Extending offer to <strong id="offer_student_name"></strong> for <strong id="offer_title"></strong>
+                    </p>
+
+                    <form id="offerForm" enctype="multipart/form-data">
+                        <input type="hidden" name="application_id" id="offer_app_id">
+                        
+                        <div class="form-group">
+                            <label class="form-label">Offer Type</label>
+                            <select name="type" class="form-select" required>
+                                <option value="placement">Full-Time Placement</option>
+                                <option value="internship">Internship</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label" id="pkgLabel">Annual Package (LPA)</label>
+                                <input type="text" name="salary" class="form-control" placeholder="e.g. 8.5" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Joining / Start Date</label>
+                                <input type="date" name="join_date" class="form-control" required>
+                            </div>
+                        </div>
+
+                        <div class="form-group" id="endDiv" style="display:none;">
+                            <label class="form-label">End Date (For Internships only)</label>
+                            <input type="date" name="end_date" class="form-control">
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Offer Letter (PDF/IMG)</label>
+                            <input type="file" name="offer_letter" class="form-control" accept=".pdf,.doc,.docx,.jpg,.png" required>
+                            <small class="form-hint" style="margin-top:4px; display:block">Upload the official offer letter for the user and TPO to review.</small>
+                        </div>
+
+                        <div class="mt-4" style="text-align:right">
+                            <button type="button" class="btn btn-outline" onclick="document.getElementById('offerModal').style.display='none'">Cancel</button>
+                            <button type="submit" class="btn btn-primary" style="margin-left:8px;">Confirm & Extend Offer</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <script src="../../js/main.js"></script>
+    <script src="../../js/company.js"></script>
+</body>
+</html>

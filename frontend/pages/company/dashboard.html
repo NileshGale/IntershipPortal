@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Company Dashboard | CareerFlow</title>
+    <link rel="stylesheet" href="../../css/style.css">
+</head>
+<body class="layout-company">
+    <div class="sidebar" id="sidebar"></div>
+    <div class="main-wrapper">
+        <div class="topbar" id="topbar"></div>
+        <div class="page-content">
+            
+            <div id="approvalWarning"></div>
+
+            <h2 class="mb-24">Recruiting Overview</h2>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon blue">💼</div>
+                    <div><div class="stat-value" id="stat-active">0</div><div class="stat-label">Active Postings</div></div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon orange">📝</div>
+                    <div><div class="stat-value" id="stat-apps">0</div><div class="stat-label">New Applications</div></div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon purple">🗓️</div>
+                    <div><div class="stat-value" id="stat-ints">0</div><div class="stat-label">Upcoming Interviews</div></div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon green">🎉</div>
+                    <div><div class="stat-value" id="stat-hires">0</div><div class="stat-label">Total Hires</div></div>
+                </div>
+            </div>
+
+            <div class="grid-2 mt-24">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Recent Applications</h3>
+                        <a href="applications.html" class="btn btn-outline btn-sm">Review All ↗</a>
+                    </div>
+                    <div class="table-wrapper">
+                        <table>
+                            <thead><tr><th>Candidate</th><th>Role Applied</th><th>Date</th><th>Status</th><th>Action</th></tr></thead>
+                            <tbody id="recentAppsBody"></tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Upcoming Interviews</h3>
+                        <a href="interviews.html" class="btn btn-outline btn-sm">Manage Schedule ↗</a>
+                    </div>
+                    <div class="table-wrapper">
+                        <table>
+                            <thead><tr><th>Schedule</th><th>Candidate</th><th>Round</th><th>Mode</th><th>Action</th></tr></thead>
+                            <tbody id="upcomingIntBody"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <script src="../../js/main.js"></script>
+    <script src="../../js/company.js"></script>
+</body>
+</html>

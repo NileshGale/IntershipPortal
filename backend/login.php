@@ -91,7 +91,7 @@ $unauth_msg  = isset($_GET['error']) && $_GET['error'] === 'unauthorized' ? 'Acc
     <a href="register.php" class="btn btn-outline" style="width:100%;justify-content:center;">Create Account</a>
 
     <div class="auth-footer" style="margin-top:24px;font-size:.78rem;">
-        <strong>Demo:</strong> parinita@gmail.com / 12345678
+        <strong>Demo:</strong> parinitapaigwar@gmail.com / 12345678
     </div>
 </div>
 <script src="/CareerFlow/frontend/js/main.js"></script>

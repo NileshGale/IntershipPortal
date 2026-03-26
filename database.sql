@@ -257,9 +257,9 @@ CREATE TABLE `placement_drives` (
 -- SAMPLE DATA
 -- ============================================================
 
--- Admin user (password: Admin@123)
+-- Admin user (password: 12345678)
 INSERT INTO `users` (`email`, `password`, `role`, `is_active`) VALUES
-('admin@college.edu', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'admin', 1);
+('parinitapaigwar@gmail.com', '$2y$10$.JvO.i5/MRDBsoP0XdfB1uTMKI/rM3Y5/0VAKWu/A4oTCvvDmaJd.', 'admin', 1);
 
 -- Sample student users (password: Student@123)
 INSERT INTO `users` (`email`, `password`, `role`, `is_active`) VALUES
